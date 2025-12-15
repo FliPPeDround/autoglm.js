@@ -1,0 +1,13 @@
+ignoreWorkspaceRootCheck: true
+shellEmulator: true
+
+packages:
+  - playground
+  - docs
+  - packages/*
+  - examples/*
+
+
+onlyBuiltDependencies:
+  - esbuild
+  - simple-git-hooks
