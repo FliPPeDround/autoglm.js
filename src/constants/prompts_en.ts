@@ -112,4 +112,9 @@ export const MESSAGES_EN = {
   double_tap_executed: 'Double tap executed',
   wait_executed: 'Wait executed',
   takeover_requested: 'Takeover requested',
+  json_parse_error: 'JSON parse error',
+  json_format_error: 'JSON format error',
+  invalid_response_type: 'Invalid response type',
+  missing_required_field: 'Missing required field',
+  invalid_parameter_format: 'Invalid parameter format',
 }

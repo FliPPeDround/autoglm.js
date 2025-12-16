@@ -1,13 +1,16 @@
 import type { ChatCompletionMessageParam } from 'openai/resources/chat/completions'
 import type { StepResult } from './types'
 import type { AgentConfigType } from '@/config'
-import consola from 'consola'
+import { log } from '@clack/prompts'
+import { bold, cyan } from 'kolorist'
 import { ActionHandler, finish } from '@/actions/handler'
 import { parseAction } from '@/actions/parse'
 import { getCurrentApp, getScreenshot } from '@/adb'
 import { getAgentConfig } from '@/config'
 import { getMessages } from '@/constants'
+import { $t } from '@/locales'
 import { MessageBuilder, ModelClient } from '@/model/client'
+import s from '@/utils/spinner'
 
 export class PhoneAgent {
   private agentConfig: AgentConfigType
@@ -129,10 +132,7 @@ export class PhoneAgent {
 
     // Get model response
     try {
-      const msgs = getMessages(this.agentConfig.lang)
-      consola.log(`\n${'='.repeat(50)}`)
-      consola.log(`💭 ${msgs.thinking}:`)
-      consola.log('-'.repeat(50))
+      s.start(`☁️  ${bold($t('think'))}`)
 
       const response = await this.modelClient.request(this.context)
 
@@ -148,10 +148,8 @@ export class PhoneAgent {
       }
 
       if (this.agentConfig.verbose) {
-        consola.log('-'.repeat(50))
-        consola.log(`🎯 ${msgs.action}:`)
-        consola.log(JSON.stringify(action, null, 2))
-        consola.log(`${'='.repeat(50)}\n`)
+        log.step(`⚙️  ${bold($t('action'))}`)
+        log.message(JSON.stringify(action, null, 2))
       }
 
       // Remove image from context to save space
@@ -178,13 +176,10 @@ export class PhoneAgent {
 
       if (finished && this.agentConfig.verbose) {
         const msgs = getMessages(this.agentConfig.lang)
-        consola.log(`\n` + `🎉 ${'='.repeat(48)}`)
+        log.success(`🎉 ${bold($t('task_completed'))}`)
         // Check if action is FinishAction before accessing message
         const actionMessage = action._metadata === 'finish' ? (action as any).message : undefined
-        consola.log(
-          `✅ ${msgs.task_completed}: ${result.message || actionMessage || msgs.done}`,
-        )
-        consola.log(`${'='.repeat(50)}\n`)
+        log.message(cyan(`${result.message || actionMessage || msgs.done}`))
       }
 
       // Check if action is FinishAction before accessing message

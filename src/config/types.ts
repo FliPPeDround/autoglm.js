@@ -7,7 +7,7 @@ export interface AgentConfigType {
   // ModelConfigType
   baseUrl: string
   apiKey: string
-  modelName: string
+  model: string
   maxTokens: number
   temperature: number
   topP: number

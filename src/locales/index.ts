@@ -1,15 +1,16 @@
-import { getLocale } from '@/utils/getLanguage'
+import { getAgentConfig } from '@/config'
+import enUS from './en-US'
 import zhCN from './zh-CN'
 
 const t_map = {
-  'zh-CN': zhCN,
+  cn: zhCN,
+  en: enUS,
 } as Record<string, any>
 
 export function $t(key: string) {
-  const locale = getLocale()
-  const message = t_map[locale] || t_map['zh-CN']
+  const locale = getAgentConfig().lang
+  const message = t_map[locale] || t_map.cn
 
-  // Support nested key access using dot notation (e.g., 'adb.connection.error')
   const keys = key.split('.')
   let result = message
 
@@ -18,7 +19,7 @@ export function $t(key: string) {
       result = result[k]
     }
     else {
-      return key // Return the original key if not found
+      return key
     }
   }
 

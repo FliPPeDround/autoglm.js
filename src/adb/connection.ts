@@ -1,9 +1,5 @@
 import type { DeviceInfo } from './types'
-import * as path from 'node:path'
-import consola from 'consola'
 import { exec } from 'tinyexec'
-import { $t } from '@/locales'
-import { __dirname } from '@/utils/dirnam'
 import { CONNECTION_TYPE } from './constants'
 
 export class ADBConnection {

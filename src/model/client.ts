@@ -1,9 +1,11 @@
 import type { ModelResponse } from './types'
 import type { AgentConfigType } from '@/config'
-import process from 'node:process'
+import { log } from '@clack/prompts'
+import { bold } from 'kolorist'
 import OpenAI from 'openai'
 import { getAgentConfig } from '@/config'
-
+import { $t } from '@/locales'
+import s from '@/utils/spinner'
 /**
  * Helper class for building conversation messages.
  */
@@ -98,73 +100,22 @@ export class ModelClient {
    * Send a request to the model.
    */
   async request(messages: OpenAI.Chat.ChatCompletionMessageParam[]): Promise<ModelResponse> {
-    const stream = await this.client.chat.completions.create({
+    const data = await this.client.chat.completions.create({
       messages,
-      model: this.config.modelName,
+      model: this.config.model,
       max_tokens: this.config.maxTokens,
       temperature: this.config.temperature,
       top_p: this.config.topP,
       frequency_penalty: this.config.frequencyPenalty,
-      stream: true,
+      stream: false,
     })
-
-    let rawContent = ''
-    let buffer = ''
-    const actionMarkers = ['finish(message=', 'do(action=']
-    let inActionPhase = false
-
-    for await (const chunk of stream) {
-      if (chunk.choices.length === 0) {
-        continue
-      }
-      const content = chunk.choices[0].delta.content
-      if (!content) {
-        continue
-      }
-
-      rawContent += content
-
-      if (inActionPhase) {
-        continue
-      }
-
-      buffer += content
-
-      let markerFound = false
-      for (const marker of actionMarkers) {
-        if (buffer.includes(marker)) {
-          const thinkingPart = buffer.split(marker, 1)[0]
-          process.stdout.write(thinkingPart)
-          process.stdout.write('\n')
-          inActionPhase = true
-          markerFound = true
-          break
-        }
-      }
-
-      if (markerFound) {
-        continue
-      }
-
-      let isPotentialMarker = false
-      for (const marker of actionMarkers) {
-        for (let i = 1; i < marker.length; i++) {
-          if (buffer.endsWith(marker.slice(0, i))) {
-            isPotentialMarker = true
-            break
-          }
-        }
-        if (isPotentialMarker) {
-          break
-        }
-      }
-
-      if (!isPotentialMarker) {
-        process.stdout.write(buffer)
-        buffer = ''
-      }
+    s.stop(`☁️ ${bold($t('thinkDone'))}`)
+    const rawContent = data.choices[0].message.content
+    if (!rawContent) {
+      throw new Error('Empty response from model')
     }
     const [thinking, action] = this._parseResponse(rawContent)
+    log.message(thinking)
     return { thinking, action, rawContent }
   }
 

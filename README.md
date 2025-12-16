@@ -6,5 +6,16 @@
 pnpm i
 pnpm dev
 
-node dist/cli.mjs 帮我打开抖音，狠狠的刷视频，刷到美女后，然后给她点赞
+node dist/cli.mjs -c config.json
+```
+
+### 配置文件[config.json]
+```json [config.json]
+{
+  "maxSteps": 200,
+  "lang": "cn",
+  "baseUrl": "https://open.bigmodel.cn/api/paas/v4/",
+  "apiKey": "xxxxxxxxxxxxxxx",
+  "model": "autoglm-phone"
+}
 ```

@@ -18,6 +18,11 @@ function getText(node: SequenceExpression) {
   return text.value as string
 }
 
+function getActionType(node: SequenceExpression) {
+  const actionType = (node.expressions[0] as AssignmentExpression).right as Literal
+  return actionType.value as string
+}
+
 /**
  * Parse action from string format.
  */
@@ -39,7 +44,7 @@ export function parseAction(actionStr: string): Action {
       throw new Error(`Invalid action format: ${actionStr}`)
     }
     const expression = (ast.body[0].body as ExpressionStatement).expression as SequenceExpression
-    const { value: actionType } = (expression.expressions[0] as AssignmentExpression).right as Literal
+    const actionType = getActionType(expression)
 
     // Parse parameters based on action type
     if (actionType === 'Launch') {

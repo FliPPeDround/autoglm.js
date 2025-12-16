@@ -1,5 +1,5 @@
-import { MESSAGES_EN, SYSTEM_PROMPT_EN } from './prompts_en'
-import { MESSAGES_ZH, SYSTEM_PROMPT_ZH } from './prompts_zh'
+import { MESSAGES_EN } from './prompts_en'
+import { MESSAGES_ZH } from './prompts_zh'
 
 /**
  * Get messages based on the language.

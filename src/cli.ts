@@ -1,56 +1,61 @@
 #!/usr/bin/env node
 
-import type { AgentConfigType } from './config/types'
 import process from 'node:process'
+import { cancel, intro, isCancel, outro, text } from '@clack/prompts'
+import { bold, cyan } from 'kolorist'
 import minimist from 'minimist'
 import { PhoneAgent } from './agent'
 import { checkModelApi, checkSystemRequirements } from './check'
 import { commandAction } from './cli/action'
+import { printBanner } from './cli/banner'
+import { getConfig } from './cli/config/prompts'
 import { setAgentConfig } from './config'
+import { $t } from './locales'
+import s from './utils/spinner'
 
 /**
  * AutoGLM.js CLI
  */
 async function main() {
-  // argv parse
+  printBanner()
   const argv = minimist(process.argv.slice(2), {
     alias: {
       help: 'h',
-    },
-    default: {
-      modelName: 'autoglm-phone',
-      baseUrl: 'https://open.bigmodel.cn/api/paas/v4/',
-      apiKey: '556166f2553d4fe1bc5a939ad3f9c299.fcYwamM3lViUNmHW',
-      maxSteps: 100,
-      lang: 'cn',
+      config: 'c',
     },
   })
-  commandAction(argv)
-  const { _, ...options } = argv
-  const task = _[0]
-
-  // set agent config
-  setAgentConfig(options as AgentConfigType)
+  const config = commandAction(argv)
+  setAgentConfig(config || await getConfig())
 
   // check system requirements
-  checkSystemRequirements()
-  checkModelApi()
+  await checkSystemRequirements()
+  await checkModelApi()
+  if (!config) {
+    s.stop($t('prompt.checking'))
+    outro($t('prompt.done'))
+  }
 
   // create agent
   const agent = new PhoneAgent()
 
-  console.log('='.repeat(50))
-  console.log('Phone Agent - AI-powered phone automation')
-  console.log('='.repeat(50))
-  console.log(`Model: ${options.modelName}`)
-  console.log(`Base URL: ${options.baseUrl}`)
-  console.log(`Max Steps: ${options.maxSteps}`)
-  console.log(`Language: ${options.lang}`)
+  // 使用更好的交互界面
+  intro(bold(cyan(`🤖 ${$t('prompt.interactiveMode')}`)))
 
-  if (task) {
-    console.log(`\nTask: ${task}`)
-    const result = await agent.run(task)
-    console.log(result)
+  let isFirstTask = true
+
+  while (true) {
+    const task = await text({
+      message: bold(`💬 ${$t('prompt.task')}`),
+      placeholder: isFirstTask ? $t('prompt.placeholder') : undefined,
+    })
+    if (isCancel(task)) {
+      cancel($t('prompt.cancel'))
+      process.exit(0)
+    }
+    if (task) {
+      await agent.run(task)
+      isFirstTask = false
+    }
   }
 }
 

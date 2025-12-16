@@ -56,7 +56,7 @@ export async function checkModelApi() {
     })
 
     const response = await client.chat.completions.create({
-      model: config.modelName,
+      model: config.model,
       messages: [{ role: 'user', content: 'hi' }],
       max_tokens: 5,
       temperature: 0.0,

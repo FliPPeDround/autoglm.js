@@ -1,6 +1,6 @@
 import type { AgentConfigType } from './types'
-import { MESSAGES_EN, SYSTEM_PROMPT_EN } from '@/constants/prompts_en'
-import { MESSAGES_ZH, SYSTEM_PROMPT_ZH } from '@/constants/prompts_zh'
+import { SYSTEM_PROMPT_EN } from '@/constants/prompts_en'
+import { SYSTEM_PROMPT_ZH } from '@/constants/prompts_zh'
 
 /**
  * Get the system prompt based on the language.
@@ -21,7 +21,7 @@ class AgentConfig {
     baseUrl: 'http://localhost:8000/v1',
     apiKey: '',
     systemPrompt: undefined,
-    modelName: 'autoglm-phone-9b',
+    model: 'autoglm-phone',
     maxTokens: 3000,
     temperature: 0.0,
     topP: 0.85,
@@ -41,7 +41,7 @@ class AgentConfig {
     }
   }
 
-  setConfig(config?: AgentConfigType) {
+  setConfig(config: Partial<AgentConfigType>) {
     this.config = { ...this.config, ...config }
   }
 
@@ -56,7 +56,7 @@ export function getAgentConfig() {
   return agentConfig.getConfig()
 }
 
-export function setAgentConfig(config?: AgentConfigType) {
+export function setAgentConfig(config: Partial<AgentConfigType>) {
   agentConfig.setConfig(config)
 }
 

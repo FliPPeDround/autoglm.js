@@ -23,9 +23,9 @@ export default {
       confirmFalse: '请手动安装 ADB 键盘',
       confirmFalsehint: {
         step1: '1.从 https://github.com/senzhk/ADBKeyBoard/blob/master/ADBKeyboard.apk 下载并安装 ADB 键盘',
-        step2: '3.在设置中找到“语言和输入”',
-        step3: '4.在“语言和输入”中找到“ADB 键盘”',
-        step4: '5.启用“ADB 键盘”',
+        step2: '3.在设置中找到"语言和输入"',
+        step3: '4.在"语言和输入"中找到"ADB 键盘"',
+        step4: '5.启用"ADB 键盘"',
       },
       hint: {
         question: '是否自动安装 ADB 键盘？',
@@ -42,6 +42,7 @@ export default {
     },
   },
   cli: {
+    language: '请选择语言',
     options: {
       baseUrl: '模型 API 基础 URL',
       model: '模型名称',
@@ -50,4 +51,33 @@ export default {
       deviceId: 'ADB设备 ID',
     },
   },
+  prompt: {
+    interactiveMode: 'AutoGLM.js 交互模式',
+    model: '请输入模型名称',
+    baseURL: '请输入模型 API 基础 URL',
+    apiKey: '请输入模型 API 密钥',
+    maxSteps: '请输入最大推理步数',
+    done: '配置完成',
+    cancel: '已取消配置',
+    checking: '正在检查系统要求',
+    task: '请描述您想要执行的任务',
+    placeholder: '帮我预订一张明天去南通机票',
+  },
+  config: {
+    errors: {
+      fileNotFound: '配置文件不存在: ',
+      invalidFormat: '配置文件必须是 JSON 格式，当前扩展名: ',
+      jsonParseError: 'JSON 解析错误: ',
+      fileReadError: '无法读取配置文件: ',
+      permissionDenied: '没有权限读取配置文件: ',
+      genericReadError: '读取配置文件时发生错误: ',
+      schemaNotFound: '无法找到 schema 文件 agent-config.schema.json',
+      validationFailed: '配置文件格式验证失败:\n',
+      genericValidationError: '配置文件验证失败: ',
+    },
+  },
+  think: '思考中',
+  thinkDone: '思考完成',
+  action: '执行动作',
+  task_completed: '任务完成',
 }

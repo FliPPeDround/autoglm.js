@@ -8,8 +8,5 @@ Usage:
 
 Options:
   --help, -h      Show this help message
-  --baseUrl      Model API base URL
-  --model         Model name
-  --apiKey        API key for model authentication
-  --max-steps     Maximum steps per task
+  --config, -c    Path to configuration file (JSON format)
 `
