@@ -1,10 +1,10 @@
 import type { ModelResponse } from './types'
 import type { AgentConfigType } from '@/config'
-import { log } from '@clack/prompts'
 import { bold } from 'kolorist'
 import OpenAI from 'openai'
 import { getAgentConfig } from '@/config'
 import { $t } from '@/locales'
+import { logger } from '@/utils/logger'
 import s from '@/utils/spinner'
 /**
  * Helper class for building conversation messages.
@@ -109,13 +109,14 @@ export class ModelClient {
       frequency_penalty: this.config.frequencyPenalty,
       stream: false,
     })
-    s.stop(`☁️ ${bold($t('thinkDone'))}`)
+    this.config.mode === 'cli' && s.stop(`☁️ ${bold($t('thinkDone'))}`)
     const rawContent = data.choices[0].message.content
     if (!rawContent) {
       throw new Error('Empty response from model')
     }
     const [thinking, action] = this._parseResponse(rawContent)
-    log.message(thinking)
+
+    logger('thinking', thinking)
     return { thinking, action, rawContent }
   }
 

@@ -8,4 +8,5 @@ export default defineConfig({
   dts: true,
   exports: true,
   publint: true,
+  external: ['cfonts'], // 将cfonts标记为外部依赖
 })

@@ -24,8 +24,12 @@ async function main() {
       config: 'c',
     },
   })
-  const config = commandAction(argv)
-  setAgentConfig(config || await getConfig())
+  const _config = commandAction(argv)
+  const config = _config || await getConfig()
+  setAgentConfig({
+    ...config,
+    mode: 'cli',
+  })
 
   // check system requirements
   await checkSystemRequirements()

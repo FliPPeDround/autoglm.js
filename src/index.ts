@@ -1,25 +1,42 @@
-import type { AgentConfigType } from '@/config'
-import { tap } from './adb/device'
+import type { AgentConfigType } from './config'
+import { PhoneAgent } from './agent'
+import { checkModelApi, checkSystemRequirements } from './check'
+import { setAgentConfig } from './config'
+import { emitter } from './utils/events'
 
-export async function createAgent(_config: AgentConfigType) {
-  // await checkSystemRequirements()
-  // setModelConfig(config.model)
-  // await checkModelApi()
-  // setAgentConfig(config.agent)
-  await tap(500, 800)
-  // const screenshot = await getScreenshot()
-  // console.log(screenshot)
+export class AutoGLM {
+  private phoneAgent: PhoneAgent
+
+  private constructor(config?: AgentConfigType) {
+    config && setAgentConfig({
+      ...config,
+      mode: 'api',
+    })
+    this.phoneAgent = new PhoneAgent()
+  }
+
+  public static async createAgent(config: AgentConfigType): Promise<AutoGLM> {
+    setAgentConfig({
+      ...config,
+      mode: 'api',
+    })
+    const instance = new AutoGLM()
+    await checkSystemRequirements()
+    await checkModelApi()
+
+    return instance
+  }
+
+  public run(task: string) {
+    this.phoneAgent.run(task)
+    return emitter
+  }
+
+  public checkModelApi() {
+    return checkModelApi()
+  }
+
+  public checkSystemRequirements() {
+    return checkSystemRequirements()
+  }
 }
-
-createAgent({
-  maxSteps: 10,
-  lang: 'cn',
-  verbose: true,
-  baseUrl: 'https://open.bigmodel.cn/api/paas/v4/',
-  apiKey: '556166f2553d4fe1bc5a939ad3f9c299.fcYwamM3lViUNmHW',
-  model: 'glm-4.5-flash',
-  maxTokens: 2048,
-  temperature: 0.5,
-  topP: 0.7,
-  frequencyPenalty: 0.0,
-})

@@ -1,14 +1,14 @@
 import type { ChatCompletionMessageParam } from 'openai/resources/chat/completions'
 import type { StepResult } from './types'
 import type { AgentConfigType } from '@/config'
-import { log } from '@clack/prompts'
-import { bold, cyan } from 'kolorist'
+import { bold } from 'kolorist'
 import { ActionHandler, finish } from '@/actions/handler'
 import { parseAction } from '@/actions/parse'
 import { getCurrentApp, getScreenshot } from '@/adb'
 import { getAgentConfig } from '@/config'
 import { $t } from '@/locales'
 import { MessageBuilder, ModelClient } from '@/model/client'
+import { logger } from '@/utils/logger'
 import s from '@/utils/spinner'
 
 export class PhoneAgent {
@@ -131,7 +131,7 @@ export class PhoneAgent {
 
     // Get model response
     try {
-      s.start(`☁️  ${bold($t('think'))}`)
+      this.agentConfig.mode === 'cli' && s.start(`☁️  ${bold($t('think'))}`)
 
       const response = await this.modelClient.request(this.context)
 
@@ -146,10 +146,7 @@ export class PhoneAgent {
         action = finish(response.action)
       }
 
-      if (this.agentConfig.verbose) {
-        log.step(`⚙️  ${bold($t('action'))}`)
-        log.message(JSON.stringify(action, null, 2))
-      }
+      logger('action', action)
 
       // Remove image from context to save space
       this.context[this.context.length - 1] = MessageBuilder.removeImagesFromMessage(
@@ -174,10 +171,10 @@ export class PhoneAgent {
       const finished = action._metadata === 'finish' || result.should_finish
 
       if (finished && this.agentConfig.verbose) {
-        log.success(`🎉 ${bold($t('task_completed'))}`)
         // Check if action is FinishAction before accessing message
         const actionMessage = action._metadata === 'finish' ? (action as any).message : undefined
-        log.message(cyan(`${result.message || actionMessage || $t('task_completed')}`))
+        const message = result.message || actionMessage || $t('task_completed')
+        logger('task_complete', message)
       }
 
       // Check if action is FinishAction before accessing message

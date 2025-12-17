@@ -15,6 +15,7 @@ export function getSystemPrompt(lang: 'cn' | 'en'): string {
 class AgentConfig {
   private static instance: AgentConfig | null = null
   private config: AgentConfigType = {
+    mode: 'cli',
     maxSteps: 100,
     lang: 'cn',
     verbose: true,

@@ -1,0 +1,13 @@
+{
+  "name": "playground",
+  "type": "module",
+  "private": true,
+  "packageManager": "pnpm@10.25.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js"
+  },
+  "dependencies": {
+    "autoglm.js": "workspace:*"
+  }
+}
