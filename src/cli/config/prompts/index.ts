@@ -24,7 +24,6 @@ export async function getConfig() {
     },
   )
   s.start($t('prompt.checking'))
-  // outro(cyan($t('prompt.done')))
 
   return config
 }

@@ -34,7 +34,7 @@ async function main() {
   // check system requirements
   await checkSystemRequirements()
   await checkModelApi()
-  if (!config) {
+  if (!_config) {
     s.stop($t('prompt.checking'))
     outro($t('prompt.done'))
   }
