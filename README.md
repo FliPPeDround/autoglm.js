@@ -266,13 +266,6 @@ emitter.on('*', (event, data) => {
 - 📧 邮件: flippedround@qq.com
 - 💖 [赞助项目](https://afdian.com/a/flippedround)
 
----
-
-<div align="center">
-  <p>如果这个项目对你有帮助，请给个 ⭐️ 支持一下！</p>
-  <p><b>Made with ❤️ by <a href="https://github.com/flippedround">@FliPPeDround</a></b></p>
-</div>
-
 ## 🙇🏻‍♂️[Sponsors](https://afdian.com/a/flippedround)
 
 <p align="center">
@@ -280,3 +273,10 @@ emitter.on('*', (event, data) => {
     <img alt="sponsors" src="https://cdn.jsdelivr.net/gh/FliPPeDround/sponsors/sponsorkit/sponsors.svg"/>
   </a>
 </p>
+
+---
+
+<div align="center">
+  <p>如果这个项目对你有帮助，请给个 ⭐️ 支持一下！</p>
+  <p><b>Made with ❤️ by <a href="https://github.com/flippedround">@FliPPeDround</a></b></p>
+</div>
