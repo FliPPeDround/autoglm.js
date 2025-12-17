@@ -50,6 +50,9 @@
     "typecheck": "tsc",
     "prepare": "simple-git-hooks"
   },
+  "dependencies": {
+    "cfonts": "^3.3.1"
+  },
   "devDependencies": {
     "@antfu/eslint-config": "^6.6.1",
     "@antfu/utils": "^9.3.0",
@@ -60,7 +63,6 @@
     "acorn-loose": "^8.5.2",
     "bumpp": "^10.3.2",
     "cac": "^6.7.14",
-    "cfonts": "^3.3.1",
     "consola": "^3.4.2",
     "dayjs": "^1.11.19",
     "eslint": "^9.39.2",
