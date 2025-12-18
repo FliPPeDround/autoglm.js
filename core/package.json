@@ -1,9 +1,10 @@
 {
-  "name": "@autoglm/workspace",
+  "name": "autoglm.js",
   "type": "module",
-  "private": true,
+  "version": "0.0.5",
+  "private": false,
   "packageManager": "pnpm@10.25.0",
-  "description": "AutoGLM.js workspace",
+  "description": "AutoGLM.js is a JavaScript library for Open-AutoGLM",
   "author": "FliPPeDround <flippedround@qq.com>",
   "license": "MIT",
   "funding": "https://afdian.com/a/flippedround",
@@ -19,29 +20,61 @@
     "agent",
     "ai"
   ],
+  "sideEffects": false,
+  "exports": {
+    ".": "./dist/index.mjs",
+    "./cli": "./dist/cli.mjs",
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "unpkg": "./schema/agent-config.schema.json",
+  "jsdelivr": "./schema/agent-config.schema.json",
+  "types": "./dist/index.d.mts",
+  "bin": {
+    "autoglm": "./dist/cli.mjs"
+  },
+  "files": [
+    "asset",
+    "dist",
+    "schema"
+  ],
   "scripts": {
+    "test": "node dist/index.mjs",
+    "build": "tsdown",
+    "dev": "tsdown --watch",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
-    "dev": "cd core && pnpm dev",
-    "build": "cd core && pnpm build",
-    "dev:desktop": "cd desktop && pnpm dev",
-    "build:desktop": "cd desktop && pnpm build",
     "prepublishOnly": "pnpm build",
     "release": "bumpp",
     "typecheck": "tsc",
     "prepare": "simple-git-hooks"
   },
+  "dependencies": {
+    "cfonts": "^3.3.1"
+  },
   "devDependencies": {
     "@antfu/eslint-config": "^6.6.1",
     "@antfu/utils": "^9.3.0",
+    "@clack/prompts": "^0.11.0",
+    "@types/minimist": "^1.2.5",
     "@types/node": "^25.0.1",
-    "@unocss/eslint-plugin": "^66.2.0",
+    "acorn": "^8.15.0",
+    "acorn-loose": "^8.5.2",
     "bumpp": "^10.3.2",
+    "cac": "^6.7.14",
+    "consola": "^3.4.2",
+    "dayjs": "^1.11.19",
     "eslint": "^9.39.2",
-    "eslint-plugin-format": "^1.0.1",
+    "kolorist": "^1.8.0",
     "lint-staged": "^16.2.7",
+    "minimist": "^1.2.8",
+    "mitt": "^3.0.1",
+    "openai": "^6.10.0",
     "publint": "^0.3.16",
     "simple-git-hooks": "^2.13.1",
+    "std-env": "^3.10.0",
+    "tinyexec": "^1.0.2",
     "tsdown": "^0.17.3",
     "typescript": "^5.9.3"
   },

@@ -1,14 +1,14 @@
+catalogMode: prefer
+ignoreWorkspaceRootCheck: true
 shellEmulator: true
+trustPolicy: no-downgrade
 
 packages:
   - playground
   - docs
   - packages/*
   - examples/*
-  - desktop
-  - core
 
 onlyBuiltDependencies:
   - esbuild
   - simple-git-hooks
-  - electron

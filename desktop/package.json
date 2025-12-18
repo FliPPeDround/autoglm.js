@@ -1,0 +1,44 @@
+{
+  "name": "@autoglm/desktop",
+  "version": "1.0.0",
+  "private": true,
+  "description": "AutoGLM.js Desktop Application",
+  "author": "FliPPeDround <flippedround@qq.com>",
+  "homepage": "https://github.com/FliPPeDround/autoglm.js#readme",
+  "main": "./out/main/index.js",
+  "scripts": {
+    "typecheck:node": "tsc --noEmit -p tsconfig.node.json --composite false",
+    "typecheck:web": "vue-tsc --noEmit -p tsconfig.web.json --composite false",
+    "typecheck": "npm run typecheck:node && npm run typecheck:web",
+    "start": "electron-vite preview",
+    "dev": "electron-vite dev",
+    "build": "npm run typecheck && electron-vite build",
+    "postinstall": "electron-builder install-app-deps",
+    "build:unpack": "npm run build && electron-builder --dir",
+    "build:win": "npm run build && electron-builder --win",
+    "build:mac": "npm run build && electron-builder --mac",
+    "build:linux": "npm run build && electron-builder --linux"
+  },
+  "dependencies": {
+    "@electron-toolkit/preload": "^3.0.2",
+    "@electron-toolkit/utils": "^4.0.0",
+    "@vueuse/core": "^13.3.0",
+    "electron-updater": "^6.3.9",
+    "vue": "^3.5.25",
+    "vue-router": "^4.5.4"
+  },
+  "devDependencies": {
+    "@electron-toolkit/tsconfig": "^2.0.0",
+    "@iconify-json/carbon": "^1.2.9",
+    "@vitejs/plugin-vue": "^6.0.2",
+    "electron": "^39.2.6",
+    "electron-builder": "^26.0.12",
+    "electron-vite": "^5.0.0",
+    "unocss": "^66.2.0",
+    "unplugin-auto-import": "^19.3.0",
+    "unplugin-vue-components": "^28.7.0",
+    "unplugin-vue-router": "^0.12.0",
+    "vite": "^7.2.6",
+    "vue-tsc": "^3.1.6"
+  }
+}

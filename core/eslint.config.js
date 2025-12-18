@@ -2,14 +2,8 @@
 import antfu from '@antfu/eslint-config'
 
 export default antfu({
-  unocss: true,
-  formatters: true,
   type: 'lib',
   rules: {
     'ts/explicit-function-return-type': 'off',
-    'pnpm/yaml-enforce-settings': 'off',
   },
-  ignores: [
-    '**/out',
-  ],
 })
