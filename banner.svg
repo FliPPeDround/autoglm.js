@@ -206,10 +206,14 @@
     <line x1="1404" y1="270" x2="1458" y2="324" opacity="0.68"></line>
     <line x1="54" y1="324" x2="0" y2="378" opacity="0.62"></line>
   </g>
-  <text
-    text-anchor="middle" dominant-baseline="middle"
-    font-family="Consolas, Monaco, monospace"
+	<text text-anchor="middle" dominant-baseline="middle"
+      font-size="160"
+      font-weight="600"
+      letter-spacing="8"
+      word-spacing="12"
+      text-rendering="geometricPrecision"
+			fill="url(#textGradient)"
   >
-    <tspan x="640" y="180" font-size="160" font-weight="900" fill="url(#textGradient)">AutoGLM.js</tspan>
-  </text>
+		<tspan x="640" y="180" >AutoGLM</tspan>
+	</text>
 </svg>
