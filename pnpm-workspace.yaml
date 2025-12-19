@@ -5,7 +5,6 @@ packages:
   - docs
   - packages/*
   - examples/*
-  - desktop
   - core
 
 onlyBuiltDependencies:
