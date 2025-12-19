@@ -1,0 +1,24 @@
+{
+  "name": "@autoglm.js/platform-tools-darwin",
+  "version": "36.0.0",
+  "os": ["darwin"],
+  "description": "Platform tools for AutoGLM.js on Darwin",
+  "author": "FliPPeDround <flippedround@qq.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/FliPPeDround/autoglm.js#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/FliPPeDround/autoglm.js"
+  },
+  "bugs": "https://github.com/FliPPeDround/autoglm.js/issues",
+  "keywords": [
+    "autoglm",
+    "open-autoglm",
+    "agent",
+    "ai"
+  ],
+  "main": "platform-tools-latest-darwin.zip",
+  "files": [
+    "platform-tools-latest-darwin.zip"
+  ]
+}

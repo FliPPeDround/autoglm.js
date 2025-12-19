@@ -8,6 +8,7 @@ packages:
   - examples/*
   - desktop
   - core
+  - assets/*
 
 onlyBuiltDependencies:
   - esbuild

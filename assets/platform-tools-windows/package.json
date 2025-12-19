@@ -1,0 +1,24 @@
+{
+  "name": "@autoglm.js/platform-tools-windows",
+  "version": "36.0.0",
+  "os": ["win32"],
+  "description": "Platform tools for AutoGLM.js on Windows",
+  "author": "FliPPeDround <flippedround@qq.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/FliPPeDround/autoglm.js#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/FliPPeDround/autoglm.js"
+  },
+  "bugs": "https://github.com/FliPPeDround/autoglm.js/issues",
+  "keywords": [
+    "autoglm",
+    "open-autoglm",
+    "agent",
+    "ai"
+  ],
+  "main": "platform-tools-latest-windows.zip",
+  "files": [
+    "platform-tools-latest-windows.zip"
+  ]
+}
