@@ -29,7 +29,7 @@
     "dev:desktop": "cd desktop && pnpm dev",
     "build:desktop": "cd desktop && pnpm build",
     "prepublishOnly": "pnpm build",
-    "release": "bumpp",
+    "release": "cd core && pnpm release",
     "typecheck": "pnpm -r typecheck",
     "prepare": "simple-git-hooks"
   },
