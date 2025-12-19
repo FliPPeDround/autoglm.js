@@ -22,8 +22,10 @@
   "scripts": {
     "lint": "eslint",
     "lint:fix": "eslint --fix",
-    "dev": "cd core && pnpm dev",
-    "build": "cd core && pnpm build",
+    "dev": "pnpm -r dev",
+    "test": "vitest",
+    "dev:core": "cd core && pnpm dev",
+    "dev:build": "cd core && pnpm build",
     "dev:desktop": "cd desktop && pnpm dev",
     "build:desktop": "cd desktop && pnpm build",
     "prepublishOnly": "pnpm build",
@@ -43,7 +45,9 @@
     "publint": "^0.3.16",
     "simple-git-hooks": "^2.13.1",
     "tsdown": "^0.17.3",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.16",
+    "vitest-package-exports": "^0.1.1"
   },
   "simple-git-hooks": {
     "pre-commit": "pnpm i --frozen-lockfile --ignore-scripts --offline && npx lint-staged"

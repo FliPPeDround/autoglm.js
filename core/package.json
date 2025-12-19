@@ -40,7 +40,7 @@
     "schema"
   ],
   "scripts": {
-    "test": "node dist/index.mjs",
+    "test": "vitest",
     "build": "tsdown",
     "dev": "tsdown --watch",
     "lint": "eslint",
@@ -59,6 +59,7 @@
     "@clack/prompts": "^0.11.0",
     "@types/minimist": "^1.2.5",
     "@types/node": "^25.0.1",
+    "@types/unzipper": "^0.10.11",
     "acorn": "^8.15.0",
     "acorn-loose": "^8.5.2",
     "bumpp": "^10.3.2",
@@ -66,17 +67,20 @@
     "consola": "^3.4.2",
     "dayjs": "^1.11.19",
     "eslint": "^9.39.2",
+    "fs-extra": "^11.3.3",
     "kolorist": "^1.8.0",
     "lint-staged": "^16.2.7",
     "minimist": "^1.2.8",
     "mitt": "^3.0.1",
     "openai": "^6.10.0",
     "publint": "^0.3.16",
+    "shell-path": "^3.1.0",
     "simple-git-hooks": "^2.13.1",
     "std-env": "^3.10.0",
     "tinyexec": "^1.0.2",
     "tsdown": "^0.17.3",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "unzipper": "^0.12.3"
   },
   "simple-git-hooks": {
     "pre-commit": "pnpm i --frozen-lockfile --ignore-scripts --offline && npx lint-staged"

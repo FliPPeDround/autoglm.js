@@ -25,6 +25,8 @@ async function main() {
     },
   })
   const _config = commandAction(argv)
+  await checkSystemRequirements()
+
   const config = _config || await getConfig()
   setAgentConfig({
     ...config,
@@ -32,7 +34,6 @@ async function main() {
   })
 
   // check system requirements
-  await checkSystemRequirements()
   await checkModelApi()
   if (!_config) {
     s.stop($t('prompt.checking'))

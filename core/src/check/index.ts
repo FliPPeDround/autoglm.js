@@ -2,6 +2,7 @@ import process from 'node:process'
 import consola from 'consola'
 import OpenAI from 'openai'
 import { ADBConnection } from '@/adb/connection'
+import { ADBAutoInstaller } from '@/adb/installer'
 import { ADBKeyboard } from '@/adb/keybord'
 import { getAgentConfig } from '@/config'
 import { $t } from '@/locales'
@@ -18,9 +19,31 @@ export async function checkSystemRequirements() {
     const result = await conn.version()
     if (!result.success) {
       consola.error($t('adb.unInstalledHint.message'))
-      consola.info($t(`adb.unInstalledHint.hint.message`))
-      consola.info($t(`adb.unInstalledHint.hint.${getSystem()}`))
-      process.exit(1)
+
+      // check 1.1: adb not installed
+      const confirm = await consola.prompt($t('adb.unInstalledHint.confirm.message'), {
+        type: 'confirm',
+        default: false,
+      })
+      if (confirm) {
+        const installer = new ADBAutoInstaller()
+        await installer.install()
+        const installed = await installer.check()
+        if (installed) {
+          consola.success('adb 安装成功')
+        }
+        else {
+          consola.error('adb 安装失败')
+          consola.info($t(`adb.unInstalledHint.hint.message`))
+          consola.info($t(`adb.unInstalledHint.hint.${getSystem()}`))
+          process.exit(1)
+        }
+      }
+      if (!confirm) {
+        consola.info($t(`adb.unInstalledHint.hint.message`))
+        consola.info($t(`adb.unInstalledHint.hint.${getSystem()}`))
+        process.exit(1)
+      }
     }
 
     // check 2: device connected

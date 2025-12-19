@@ -8,6 +8,9 @@ export default {
         linux: 'sudo apt install android-tools-adb',
         windows: '从 https://developer.android.com/studio/releases/platform-tools 下载并安装 ADB',
       },
+      confirm: {
+        message: '是否自动安装 ADB？',
+      },
     },
     deviceUnconnectedHint: {
       message: '设备未连接',
