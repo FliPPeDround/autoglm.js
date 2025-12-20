@@ -20,3 +20,11 @@ export class Screenshot {
     public height: number,
   ) {}
 }
+
+/**
+ * ADB keyboard check result.
+ */
+export interface ADBKeyboardCheckResult {
+  success: boolean
+  message: string
+}

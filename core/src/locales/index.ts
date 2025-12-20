@@ -1,4 +1,5 @@
-import { getAgentConfig } from '@/config'
+import type { AgentConfigStore } from '@/config'
+import { defaultAgentConfigStore, getAgentConfig } from '@/config'
 import enUS from './en-US'
 import zhCN from './zh-CN'
 
@@ -7,21 +8,27 @@ const t_map = {
   en: enUS,
 } as Record<string, any>
 
-export function $t(key: string) {
-  const locale = getAgentConfig().lang
-  const message = t_map[locale] || t_map.cn
+export type Translator = (key: string) => string
 
-  const keys = key.split('.')
-  let result = message
+export function createTranslator(store: AgentConfigStore = defaultAgentConfigStore): Translator {
+  return (key: string) => {
+    const locale = getAgentConfig(store).lang
+    const message = t_map[locale] || t_map.cn
 
-  for (const k of keys) {
-    if (result && typeof result === 'object' && k in result) {
-      result = result[k]
+    const keys = key.split('.')
+    let result = message
+
+    for (const k of keys) {
+      if (result && typeof result === 'object' && k in result) {
+        result = result[k]
+      }
+      else {
+        return key
+      }
     }
-    else {
-      return key
-    }
+
+    return result
   }
-
-  return result
 }
+
+export const $t = createTranslator()

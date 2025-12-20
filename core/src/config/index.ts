@@ -12,8 +12,7 @@ export function getSystemPrompt(lang: 'cn' | 'en'): string {
 /**
  * Configuration for the model.
  */
-class AgentConfig {
-  private static instance: AgentConfig | null = null
+class AgentConfigStore {
   private config: AgentConfigType = {
     mode: 'cli',
     maxSteps: 100,
@@ -28,36 +27,42 @@ class AgentConfig {
     frequencyPenalty: 0.2,
   }
 
-  public static getInstance(): AgentConfig {
-    if (AgentConfig.instance === null) {
-      AgentConfig.instance = new AgentConfig()
+  constructor(initialConfig?: Partial<AgentConfigType>) {
+    if (initialConfig) {
+      this.setConfig(initialConfig)
     }
-    return AgentConfig.instance
-  }
-
-  private constructor() {
-    if (this.config.systemPrompt === undefined) {
-      this.config.systemPrompt = getSystemPrompt(this.config.lang)
-    }
+    this.ensureSystemPrompt()
   }
 
   setConfig(config: Partial<AgentConfigType>) {
     this.config = { ...this.config, ...config }
+    this.ensureSystemPrompt()
   }
 
   getConfig(): AgentConfigType {
     return this.config
   }
+
+  private ensureSystemPrompt() {
+    if (!this.config.systemPrompt) {
+      this.config.systemPrompt = getSystemPrompt(this.config.lang)
+    }
+  }
 }
 
-const agentConfig = AgentConfig.getInstance()
+const defaultAgentConfigStore = new AgentConfigStore()
 
-export function getAgentConfig() {
-  return agentConfig.getConfig()
+export function createAgentConfigStore(config?: Partial<AgentConfigType>) {
+  return new AgentConfigStore(config)
 }
 
-export function setAgentConfig(config: Partial<AgentConfigType>) {
-  agentConfig.setConfig(config)
+export function getAgentConfig(store: AgentConfigStore = defaultAgentConfigStore) {
+  return store.getConfig()
 }
 
+export function setAgentConfig(config: Partial<AgentConfigType>, store: AgentConfigStore = defaultAgentConfigStore) {
+  store.setConfig(config)
+}
+
+export { AgentConfigStore, defaultAgentConfigStore }
 export type { AgentConfigType }

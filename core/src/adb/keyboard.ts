@@ -1,16 +1,20 @@
+import type { ADBKeyboardCheckResult } from './types'
 import path from 'node:path'
 import consola from 'consola'
 import { exec } from 'tinyexec'
 import { $t } from '@/locales'
+import { getAdbPrefix } from './utils'
 
 export class ADBKeyboard {
   /**
    * Check ADB Keyboard is installed.
    */
-  async isKeyboardInstalled() {
+  async isKeyboardInstalled(deviceId?: string): Promise<ADBKeyboardCheckResult> {
+    const adbPrefix = getAdbPrefix(deviceId)
+
     try {
       // 首先检查已启用的输入法
-      const enabledResult = await exec('adb', ['shell', 'ime', 'list', '-s'])
+      const enabledResult = await exec(adbPrefix[0], [...adbPrefix.slice(1), 'shell', 'ime', 'list', '-s'])
       const enabledImeList = enabledResult.stdout.trim()
 
       if (enabledImeList.includes('com.android.adbkeyboard/.AdbIME')) {
@@ -25,8 +29,7 @@ export class ADBKeyboard {
       })
 
       if (confirm) {
-        await this.installKeyboard()
-        return { success: true, message: 'ADB Keyboard is installed' }
+        return await this.installKeyboard(deviceId)
       }
       else {
         consola.info($t('adb.keyboardUnInstalledHint.confirmFalse'))
@@ -47,13 +50,16 @@ export class ADBKeyboard {
   /**
    * Install ADB Keyboard.
    */
-  async installKeyboard() {
+  async installKeyboard(deviceId?: string): Promise<ADBKeyboardCheckResult> {
+    const adbPrefix = getAdbPrefix(deviceId)
+
     try {
       consola.start($t('adb.installKeyboard.start'))
       const apkPath = path.join(__dirname, '../asset/ADBKeyboard.apk')
-      await exec('adb', ['install', apkPath])
-      await exec('adb', ['shell', 'ime', 'enable', 'com.android.adbkeyboard/.AdbIME'])
+      await exec(adbPrefix[0], [...adbPrefix.slice(1), 'install', apkPath])
+      await exec(adbPrefix[0], [...adbPrefix.slice(1), 'shell', 'ime', 'enable', 'com.android.adbkeyboard/.AdbIME'])
       consola.success($t('adb.installKeyboard.success'))
+      return { success: true, message: 'ADB Keyboard is installed' }
     }
     catch (error) {
       return {

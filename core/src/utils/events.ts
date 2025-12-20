@@ -17,11 +17,16 @@ export const EventTypes = {
 export type EventType = typeof EventTypes[keyof typeof EventTypes]
 
 // 创建带类型的 emitter
-type MittEvents = Record<EventType, EventData>
-export const emitter = mitt<MittEvents>()
+export type MittEvents = Record<EventType, EventData>
 
-export function emit(event: EventType, data: any) {
-  emitter.emit(event, {
+export function createEmitter() {
+  return mitt<MittEvents>()
+}
+
+export const emitter = createEmitter()
+
+export function emit(event: EventType, data: any, target: mitt.Emitter<MittEvents> = emitter) {
+  target.emit(event, {
     message: data,
     time: dayjs().format('YYYY-MM-DD HH:mm:ss.SSS'),
   })

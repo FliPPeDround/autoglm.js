@@ -1,10 +1,13 @@
 import type { ModelResponse } from './types'
-import type { AgentConfigType } from '@/config'
+import type { AgentConfigStore } from '@/config'
+import type { Translator } from '@/locales'
+import type { LoggerFn } from '@/utils/logger'
+import type { SpinnerInstance } from '@/utils/spinner'
 import { bold } from 'kolorist'
 import OpenAI from 'openai'
-import { getAgentConfig } from '@/config'
-import { $t } from '@/locales'
-import { logger } from '@/utils/logger'
+import { defaultAgentConfigStore, getAgentConfig } from '@/config'
+import { createTranslator } from '@/locales'
+import { logger as defaultLogger } from '@/utils/logger'
 import s from '@/utils/spinner'
 /**
  * Helper class for building conversation messages.
@@ -86,10 +89,25 @@ export class MessageBuilder {
 /**
  * Client for interacting with OpenAI-compatible vision-language models.
  */
+interface ModelClientDeps {
+  configStore: AgentConfigStore
+  logger: LoggerFn
+  spinner: SpinnerInstance
+  t: Translator
+}
+
+const defaultDeps: ModelClientDeps = {
+  configStore: defaultAgentConfigStore,
+  logger: defaultLogger,
+  spinner: s,
+  t: createTranslator(defaultAgentConfigStore),
+}
+
 export class ModelClient {
   private client: OpenAI
 
-  constructor(private config: AgentConfigType = getAgentConfig()) {
+  constructor(private deps: ModelClientDeps = defaultDeps) {
+    const config = getAgentConfig(this.deps.configStore)
     this.client = new OpenAI({
       baseURL: config.baseUrl,
       apiKey: config.apiKey,
@@ -100,23 +118,24 @@ export class ModelClient {
    * Send a request to the model.
    */
   async request(messages: OpenAI.Chat.ChatCompletionMessageParam[]): Promise<ModelResponse> {
+    const config = getAgentConfig(this.deps.configStore)
     const data = await this.client.chat.completions.create({
       messages,
-      model: this.config.model,
-      max_tokens: this.config.maxTokens,
-      temperature: this.config.temperature,
-      top_p: this.config.topP,
-      frequency_penalty: this.config.frequencyPenalty,
+      model: config.model,
+      max_tokens: config.maxTokens,
+      temperature: config.temperature,
+      top_p: config.topP,
+      frequency_penalty: config.frequencyPenalty,
       stream: false,
     })
-    this.config.mode === 'cli' && s.stop(`☁️ ${bold($t('thinkDone'))}`)
+    config.mode === 'cli' && this.deps.spinner.stop(`☁️ ${bold(this.deps.t('thinkDone'))}`)
     const rawContent = data.choices[0].message.content
     if (!rawContent) {
       throw new Error('Empty response from model')
     }
     const [thinking, action] = this._parseResponse(rawContent)
 
-    logger('thinking', thinking)
+    this.deps.logger('thinking', thinking)
     return { thinking, action, rawContent }
   }
 

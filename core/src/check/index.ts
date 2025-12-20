@@ -1,14 +1,20 @@
+import type { AgentConfigStore } from '@/config'
+import type { Translator } from '@/locales'
 import process from 'node:process'
 import consola from 'consola'
 import OpenAI from 'openai'
 import { ADBConnection } from '@/adb/connection'
 import { ADBAutoInstaller } from '@/adb/installer'
-import { ADBKeyboard } from '@/adb/keybord'
-import { getAgentConfig } from '@/config'
-import { $t } from '@/locales'
+import { ADBKeyboard } from '@/adb/keyboard'
+import { defaultAgentConfigStore, getAgentConfig } from '@/config'
+import { createTranslator } from '@/locales'
 import { getSystem } from '@/utils/getSystem'
 
-export async function checkSystemRequirements() {
+export async function checkSystemRequirements(
+  configStore: AgentConfigStore = defaultAgentConfigStore,
+  t: Translator = createTranslator(configStore),
+) {
+  const config = getAgentConfig(configStore)
   /**
    * check adb connection
    */
@@ -18,10 +24,10 @@ export async function checkSystemRequirements() {
     // check 1: adb installed
     const result = await conn.version()
     if (!result.success) {
-      consola.error($t('adb.unInstalledHint.message'))
+      consola.error(t('adb.unInstalledHint.message'))
 
       // check 1.1: adb not installed
-      const confirm = await consola.prompt($t('adb.unInstalledHint.confirm.message'), {
+      const confirm = await consola.prompt(t('adb.unInstalledHint.confirm.message'), {
         type: 'confirm',
         default: false,
       })
@@ -34,14 +40,14 @@ export async function checkSystemRequirements() {
         }
         else {
           consola.error('adb 安装失败')
-          consola.info($t(`adb.unInstalledHint.hint.message`))
-          consola.info($t(`adb.unInstalledHint.hint.${getSystem()}`))
+          consola.info(t(`adb.unInstalledHint.hint.message`))
+          consola.info(t(`adb.unInstalledHint.hint.${getSystem()}`))
           process.exit(1)
         }
       }
       if (!confirm) {
-        consola.info($t(`adb.unInstalledHint.hint.message`))
-        consola.info($t(`adb.unInstalledHint.hint.${getSystem()}`))
+        consola.info(t(`adb.unInstalledHint.hint.message`))
+        consola.info(t(`adb.unInstalledHint.hint.${getSystem()}`))
         process.exit(1)
       }
     }
@@ -49,15 +55,15 @@ export async function checkSystemRequirements() {
     // check 2: device connected
     const devices = await conn.devices()
     if (!devices.success) {
-      consola.error($t('adb.deviceUnconnectedHint.message'))
-      consola.info($t(`adb.deviceUnconnectedHint.hint.step1`))
-      consola.info($t(`adb.deviceUnconnectedHint.hint.step2`))
-      consola.info($t(`adb.deviceUnconnectedHint.hint.step3`))
+      consola.error(t('adb.deviceUnconnectedHint.message'))
+      consola.info(t(`adb.deviceUnconnectedHint.hint.step1`))
+      consola.info(t(`adb.deviceUnconnectedHint.hint.step2`))
+      consola.info(t(`adb.deviceUnconnectedHint.hint.step3`))
       process.exit(1)
     }
 
     // check 3: ADB Keyboard connected
-    const keyboard = await key.isKeyboardInstalled()
+    const keyboard = await key.isKeyboardInstalled(config.deviceId)
     if (!keyboard.success) {
       process.exit(1)
     }
@@ -70,8 +76,11 @@ export async function checkSystemRequirements() {
   }
 }
 
-export async function checkModelApi() {
-  const config = getAgentConfig()
+export async function checkModelApi(
+  configStore: AgentConfigStore = defaultAgentConfigStore,
+  t: Translator = createTranslator(configStore),
+) {
+  const config = getAgentConfig(configStore)
   try {
     const client = new OpenAI({
       baseURL: config.baseUrl,
@@ -89,7 +98,7 @@ export async function checkModelApi() {
     const isSuccess = response.choices && response.choices.length > 0
 
     if (!isSuccess) {
-      consola.error($t('model.check.empty'))
+      consola.error(t('model.check.empty'))
       process.exit(1)
     }
   }
