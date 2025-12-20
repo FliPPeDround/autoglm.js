@@ -20,8 +20,6 @@
 
 ## 🚀 快速开始
 
-https://github.com/FliPPeDround/autoglm.js
-
 ### 快捷使用
 
 ```bash
