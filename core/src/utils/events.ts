@@ -1,3 +1,4 @@
+import type { Emitter } from 'mitt'
 import dayjs from 'dayjs'
 import mitt from 'mitt'
 
@@ -25,7 +26,7 @@ export function createEmitter() {
 
 export const emitter = createEmitter()
 
-export function emit(event: EventType, data: any, target: mitt.Emitter<MittEvents> = emitter) {
+export function emit(event: EventType, data: any, target: Emitter<MittEvents> = emitter) {
   target.emit(event, {
     message: data,
     time: dayjs().format('YYYY-MM-DD HH:mm:ss.SSS'),

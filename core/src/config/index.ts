@@ -3,13 +3,6 @@ import { SYSTEM_PROMPT_EN } from '@/constants/prompts_en'
 import { SYSTEM_PROMPT_ZH } from '@/constants/prompts_zh'
 
 /**
- * Get the system prompt based on the language.
- */
-export function getSystemPrompt(lang: 'cn' | 'en'): string {
-  return lang === 'cn' ? SYSTEM_PROMPT_ZH : SYSTEM_PROMPT_EN
-}
-
-/**
  * Configuration for the model.
  */
 class AgentConfigStore {
@@ -45,7 +38,9 @@ class AgentConfigStore {
 
   private ensureSystemPrompt() {
     if (!this.config.systemPrompt) {
-      this.config.systemPrompt = getSystemPrompt(this.config.lang)
+      this.config.systemPrompt = this.config.lang === 'cn'
+        ? SYSTEM_PROMPT_ZH
+        : SYSTEM_PROMPT_EN
     }
   }
 }
