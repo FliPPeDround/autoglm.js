@@ -1,7 +1,7 @@
 import path from 'node:path'
-import { extractZip } from '@autoglm.js/shared'
+import { __dirname, extractZip } from '@autoglm.js/shared'
 
 export async function installADB(installPath: string) {
-  const adbZipPath = path.join('./../', 'platform-tools-latest-windows.zip')
+  const adbZipPath = path.join(__dirname, '../', 'platform-tools-latest-windows.zip')
   await extractZip(adbZipPath, installPath)
 }
