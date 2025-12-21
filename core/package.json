@@ -46,7 +46,8 @@
     "lint:fix": "eslint --fix",
     "prepublishOnly": "node ./scripts/sync-version.mjs && pnpm build",
     "release": "bumpp",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "test": "vitest"
   },
   "dependencies": {
     "cfonts": "^3.3.1"
