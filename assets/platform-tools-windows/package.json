@@ -5,6 +5,7 @@
   "os": [
     "win32"
   ],
+  "private": false,
   "description": "Platform tools for AutoGLM.js on Windows",
   "author": "FliPPeDround <flippedround@qq.com>",
   "license": "MIT",

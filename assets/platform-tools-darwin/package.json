@@ -5,6 +5,7 @@
   ],
   "type": "module",
   "version": "36.0.0",
+  "private": false,
   "description": "Platform tools for AutoGLM.js on Darwin",
   "author": "FliPPeDround <flippedround@qq.com>",
   "license": "MIT",
