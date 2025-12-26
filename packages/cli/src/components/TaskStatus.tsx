@@ -1,4 +1,5 @@
 import { Box, Text } from 'ink'
+import Spinner from 'ink-spinner'
 
 interface TaskStatusProps {
   isRunning: boolean
@@ -18,6 +19,7 @@ export default function TaskStatus({ isRunning, currentTask }: TaskStatusProps) 
         </Box>
         <Text color={isRunning ? 'cyan' : 'green'} bold>
           {isRunning ? 'RUNNING' : 'IDLE'}
+          {isRunning && <Spinner type="dots" />}
         </Text>
       </Box>
       {currentTask && (

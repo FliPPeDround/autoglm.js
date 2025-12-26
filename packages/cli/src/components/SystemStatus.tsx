@@ -1,40 +1,8 @@
-import type { AutoGLM } from 'autoglm.js'
 import { Box, Text } from 'ink'
-import { useEffect, useState } from 'react'
+import { useSystemCheck } from '@/hooks/useAutoGLM'
 
-interface CheckResult {
-  system: boolean | null
-  api: boolean | null
-}
-
-export default function SystemStatus({ autoGLMAgent }: { autoGLMAgent: AutoGLM }) {
-  const [checks, setChecks] = useState<CheckResult>({
-    system: null,
-    api: null,
-  })
-
-  useEffect(() => {
-    const runChecks = async () => {
-      try {
-        const [systemCheck, apiCheck] = await Promise.all([
-          autoGLMAgent.checkSystemRequirements(),
-          autoGLMAgent.checkModelApi(),
-        ])
-        setChecks({
-          system: systemCheck.success,
-          api: apiCheck.success,
-        })
-      }
-      catch {
-        setChecks({
-          system: false,
-          api: false,
-        })
-      }
-    }
-
-    runChecks()
-  }, [autoGLMAgent])
+export default function SystemStatus() {
+  const { systemCheck, apiCheck, isChecking } = useSystemCheck()
 
   const getStatusColor = (status: boolean | null) => {
     if (status === null)
@@ -44,7 +12,7 @@ export default function SystemStatus({ autoGLMAgent }: { autoGLMAgent: AutoGLM }
 
   const getStatusText = (status: boolean | null) => {
     if (status === null)
-      return 'Checking...'
+      return isChecking ? 'Checking...' : 'Unknown'
     return status ? 'OK' : 'Failed'
   }
 
@@ -52,14 +20,14 @@ export default function SystemStatus({ autoGLMAgent }: { autoGLMAgent: AutoGLM }
     <Box marginBottom={1} gap={4}>
       <Box gap={1}>
         <Text color="gray">SYSTEM:</Text>
-        <Text color={getStatusColor(checks.system)} bold>
-          {getStatusText(checks.system)}
+        <Text color={getStatusColor(systemCheck)} bold>
+          {getStatusText(systemCheck)}
         </Text>
       </Box>
       <Box gap={1}>
         <Text color="gray">API:</Text>
-        <Text color={getStatusColor(checks.api)} bold>
-          {getStatusText(checks.api)}
+        <Text color={getStatusColor(apiCheck)} bold>
+          {getStatusText(apiCheck)}
         </Text>
       </Box>
     </Box>

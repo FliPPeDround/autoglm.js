@@ -147,6 +147,9 @@ importers:
       ink-scroll-view:
         specifier: ^0.3.2
         version: 0.3.2(ink@6.6.0(@types/react@19.2.7)(react@19.2.3))(react@19.2.3)
+      ink-spinner:
+        specifier: ^5.0.0
+        version: 5.0.0(ink@6.6.0(@types/react@19.2.7)(react@19.2.3))(react@19.2.3)
       ink-text-input:
         specifier: ^6.0.0
         version: 6.0.0(ink@6.6.0(@types/react@19.2.7)(react@19.2.3))(react@19.2.3)
@@ -2945,6 +2948,13 @@ packages:
     peerDependencies:
       ink: '>=6'
       react: '>=19'
+
+  ink-spinner@5.0.0:
+    resolution: {integrity: sha512-EYEasbEjkqLGyPOUc8hBJZNuC5GvXGMLu0w5gdTNskPc7Izc5vO3tdQEYnzvshucyGCBXc86ig0ujXPMWaQCdA==}
+    engines: {node: '>=14.16'}
+    peerDependencies:
+      ink: '>=4.0.0'
+      react: '>=18.0.0'
 
   ink-text-input@6.0.0:
     resolution: {integrity: sha512-Fw64n7Yha5deb1rHY137zHTAbSTNelUKuB5Kkk2HACXEtwIHBCf9OH2tP/LQ9fRYTl1F0dZgbW0zPnZk6FA9Lw==}
@@ -7560,6 +7570,12 @@ snapshots:
 
   ink-scroll-view@0.3.2(ink@6.6.0(@types/react@19.2.7)(react@19.2.3))(react@19.2.3):
     dependencies:
+      ink: 6.6.0(@types/react@19.2.7)(react@19.2.3)
+      react: 19.2.3
+
+  ink-spinner@5.0.0(ink@6.6.0(@types/react@19.2.7)(react@19.2.3))(react@19.2.3):
+    dependencies:
+      cli-spinners: 2.9.2
       ink: 6.6.0(@types/react@19.2.7)(react@19.2.3)
       react: 19.2.3
 

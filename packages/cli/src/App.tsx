@@ -1,61 +1,34 @@
 import process from 'node:process'
-import { AutoGLM, EventType } from 'autoglm.js'
 import { Box } from 'ink'
 import TextInput from 'ink-text-input'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import Banner from './components/Banner'
 import { CommandMenu } from './components/CommandMenu'
+import { ErrorBoundary } from './components/ErrorBoundary'
 import EventLog from './components/EventLog'
 import Info from './components/Info'
 import TaskStatus from './components/TaskStatus'
+import { loadConfig } from './config'
+import { AgentProvider } from './context/AgentContext'
+import { useAutoGLM } from './hooks'
 
-const autoGLMAgent = new AutoGLM({
-  maxSteps: 100,
-  lang: 'cn',
-  baseUrl: 'https://open.bigmodel.cn/api/paas/v4/',
-  apiKey: '74fab98ebabd483a9fb88e311c14f61c.OIQrXM8thm8vSxo1',
-  model: 'autoglm-phone',
-})
-
-function handleCommand(command: string) {
+function handleCommand(command: string): boolean {
   switch (command) {
     case 'help':
       console.log('Help: Available commands: /help, /exit')
-      break
+      return true
     case 'exit':
       process.exit(0)
-      break
+      return true
     default:
       console.log(`Unknown command: /${command}`)
+      return false
   }
 }
 
-export default function App() {
+function AppContent() {
   const [query, setQuery] = useState('')
-  const [events, setEvents] = useState<any[]>([])
-  const [isRunning, setIsRunning] = useState(false)
-  const [currentTask, setCurrentTask] = useState<string | null>(null)
-
-  useEffect(() => {
-    autoGLMAgent.on(EventType.START, (data) => {
-      setCurrentTask(data.message || data)
-      setIsRunning(true)
-    })
-    autoGLMAgent.on(EventType.THINKING, (data) => {
-      setEvents(prev => [...prev, { type: 'thinking', data, time: data.time }])
-    })
-    autoGLMAgent.on(EventType.ACTION, (data) => {
-      setEvents(prev => [...prev, { type: 'action', data, time: data.time }])
-    })
-    autoGLMAgent.on(EventType.TASK_COMPLETE, (data) => {
-      setIsRunning(false)
-      setEvents(prev => [...prev, { type: 'task_complete', data, time: data.time }])
-    })
-    autoGLMAgent.on(EventType.ERROR, (data) => {
-      setIsRunning(false)
-      setEvents(prev => [...prev, { type: 'error', data, time: data.time }])
-    })
-  }, [])
+  const { isRunning, currentTask, run } = useAutoGLM()
 
   const handleSubmit = async (value: string) => {
     setQuery('')
@@ -64,7 +37,7 @@ export default function App() {
       handleCommand(command)
     }
     else {
-      await autoGLMAgent.run(value)
+      await run(value)
     }
   }
 
@@ -77,19 +50,45 @@ export default function App() {
     <Box marginRight={2} marginLeft={2} flexDirection="column">
       <Banner />
       <TaskStatus isRunning={isRunning} currentTask={currentTask} />
-      <EventLog events={events} />
+      <EventLog enableKeyboard={!query.startsWith('/')} />
       <Box borderStyle="round">
         <TextInput
           value={query}
           onChange={setQuery}
           onSubmit={handleSubmit}
-          placeholder="  帮我订一张明天去南通的机票"
+          placeholder="  Please input your task"
         />
       </Box>
-      <Info autoGLMAgent={autoGLMAgent} />
       {query.startsWith('/') && (
         <CommandMenu query={query} onCommandSelect={handleCommandSelect} />
       )}
+      <Info />
     </Box>
   )
 }
+
+function App() {
+  let config
+  try {
+    config = loadConfig()
+  }
+  catch {
+    config = {
+      maxSteps: 100,
+      lang: 'cn' as const,
+      baseUrl: 'https://open.bigmodel.cn/api/paas/v4/',
+      apiKey: '74fab98ebabd483a9fb88e311c14f61c.OIQrXM8thm8vSxo1',
+      model: 'autoglm-phone',
+    }
+  }
+
+  return (
+    <ErrorBoundary>
+      <AgentProvider config={config}>
+        <AppContent />
+      </AgentProvider>
+    </ErrorBoundary>
+  )
+}
+
+export default App

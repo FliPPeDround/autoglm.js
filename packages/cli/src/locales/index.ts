@@ -1,4 +1,3 @@
-import { getAgentConfig } from '@/config'
 import enUS from './en-US'
 import zhCN from './zh-CN'
 
@@ -7,8 +6,9 @@ const t_map = {
   en: enUS,
 } as Record<string, any>
 
+const locale: string = 'cn'
+
 export function $t(key: string) {
-  const locale = getAgentConfig().lang
   const message = t_map[locale] || t_map.cn
 
   const keys = key.split('.')
