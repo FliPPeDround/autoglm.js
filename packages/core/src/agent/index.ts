@@ -52,6 +52,11 @@ export class PhoneAgent {
    * Run the agent to complete a task.
    */
   async run(task: string, signal?: AbortSignal): Promise<string> {
+    if (this.abortController) {
+      this.abortController.abort()
+      this.abortController = null
+    }
+
     this.abortController = new AbortController()
     this.isAborted = false
 
