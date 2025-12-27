@@ -15,8 +15,8 @@ export class ADBManager {
     this.keyboard = new ADBKeyboard(context)
   }
 
-  async install() {
-    const installer = new ADBAutoInstaller({ adbPath: this.ctx.getConfig().adbPath })
+  async install(customPlatformToolsPath?: string) {
+    const installer = new ADBAutoInstaller(customPlatformToolsPath)
     await installer.install()
   }
 

@@ -41,10 +41,9 @@ export class ADBKeyboard {
   /**
    * Install ADB Keyboard.
    */
-  async installKeyboard() {
+  async installKeyboard(customApkPath?: string) {
     try {
-      const { adbKeyboardApkPath } = this.ctx.getConfig()
-      const apkPath = adbKeyboardApkPath || path.join(__dirname, '../asset/ADBKeyboard.apk')
+      const apkPath = customApkPath ?? path.join(__dirname, '../asset/ADBKeyboard.apk')
       await runAdbCommand(this.deviceId, 'install', apkPath)
       await runAdbCommand(this.deviceId, 'shell', 'ime', 'enable', 'com.android.adbkeyboard/.AdbIME')
     }

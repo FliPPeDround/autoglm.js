@@ -8,14 +8,12 @@ export class ADBAutoInstaller {
   private installPath: string
   private adbPath: string
   private platformToolsPath: string
-  private customAdbPath?: string
 
-  constructor(options?: { adbPath?: string }) {
-    this.customAdbPath = options?.adbPath
+  constructor(customPlatformToolsPath?: string) {
     this.installPath = this.getDefaultInstallPath()
 
-    this.platformToolsPath = options?.adbPath ? path.dirname(options.adbPath) : path.join(this.installPath, 'platform-tools')
-    this.adbPath = options?.adbPath || path.join(this.platformToolsPath, 'adb')
+    this.platformToolsPath = customPlatformToolsPath ?? path.join(this.installPath, 'platform-tools')
+    this.adbPath = path.join(this.platformToolsPath, 'adb')
   }
 
   getCurrentShellPath() {
@@ -34,16 +32,12 @@ export class ADBAutoInstaller {
   }
 
   async install() {
+    await fs.ensureDir(this.installPath)
+    // check if adb file exists
     if (await this.check()) {
       this.setupEnvironmentVariables()
       return
     }
-
-    if (this.customAdbPath) {
-      throw new Error(`ADB not found at provided path: ${this.adbPath}`)
-    }
-
-    await fs.ensureDir(this.installPath)
     if (isMacOS) {
       const { installADB } = await import('@autoglm.js/platform-tools-darwin')
       await installADB(this.installPath)
