@@ -16,6 +16,8 @@ export class AgentConfigStore {
   private config: AgentConfigType = {
     maxSteps: 100,
     lang: 'cn',
+    adbPath: undefined,
+    adbKeyboardApkPath: undefined,
     baseUrl: 'http://localhost:8000/v1',
     apiKey: '',
     systemPrompt: undefined,

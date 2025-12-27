@@ -16,7 +16,7 @@ export class ADBManager {
   }
 
   async install() {
-    const installer = new ADBAutoInstaller()
+    const installer = new ADBAutoInstaller({ adbPath: this.ctx.getConfig().adbPath })
     await installer.install()
   }
 
