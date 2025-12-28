@@ -52,7 +52,7 @@ export class ADBManager {
     return this.keyboard.isKeyboardInstalled()
   }
 
-  async installKeyboard() {
-    return this.keyboard.installKeyboard()
+  async installKeyboard(customApkPath?: string) {
+    return this.keyboard.installKeyboard(customApkPath)
   }
 }
