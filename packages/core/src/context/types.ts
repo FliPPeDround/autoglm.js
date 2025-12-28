@@ -2,8 +2,6 @@ export interface AgentConfigType {
   maxSteps: number
   lang: 'cn' | 'en'
   deviceId?: string
-  adbPath?: string
-  adbKeyboardApkPath?: string
   systemPrompt?: string
   // ModelConfigType
   baseUrl: string
