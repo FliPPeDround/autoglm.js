@@ -9,10 +9,10 @@ export class ADBAutoInstaller {
   private adbPath: string
   private platformToolsPath: string
 
-  constructor() {
+  constructor(customPlatformToolsPath?: string) {
     this.installPath = this.getDefaultInstallPath()
 
-    this.platformToolsPath = path.join(this.installPath, 'platform-tools')
+    this.platformToolsPath = customPlatformToolsPath ?? path.join(this.installPath, 'platform-tools')
     this.adbPath = path.join(this.platformToolsPath, 'adb')
   }
 
