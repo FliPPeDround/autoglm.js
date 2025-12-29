@@ -1,14 +1,20 @@
 import { randomUUID } from 'node:crypto'
-import { readFile, unlink } from 'node:fs/promises'
+import { unlink } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
+import sharp from 'sharp'
 import { exec } from 'tinyexec'
+
 import { Screenshot } from './types'
 /**
  * Take a screenshot and return it as a base64 encoded string.
  * Similar to the Python version, saves to temp file first then converts to base64.
  */
-export async function getScreenshot(deviceId?: string, timeout: number = 10): Promise<Screenshot> {
+export async function getScreenshot(
+  deviceId?: string,
+  timeout: number = 10,
+  quality: number = 80,
+): Promise<Screenshot> {
   const tempPath = join(tmpdir(), `screenshot_${randomUUID()}.png`)
   const devicePrefix = deviceId ? ['-s', deviceId] : []
 
@@ -41,8 +47,25 @@ export async function getScreenshot(deviceId?: string, timeout: number = 10): Pr
     await exec('adb', pullArgs, { timeout: 5000 })
 
     // Read and encode image
-    const imageBuffer = await readFile(tempPath)
-    const base64Data = imageBuffer.toString('base64')
+    // const imageBuffer = await readFile(tempPath)
+    // const base64Data = imageBuffer.toString('base64')
+
+    const buffer = await sharp(tempPath)
+      .resize({
+        width: 480,
+        withoutEnlargement: true,
+        fastShrinkOnLoad: true,
+      })
+      .webp({
+        lossless: false,
+        quality,
+        effort: 6,
+      })
+      .toBuffer()
+    const base64Data = buffer.toString('base64')
+
+    // debug:
+    // fs.writeFileSync(join(__dirname, `screenshot_${randomUUID()}.webp`), buffer)
 
     // Cleanup temp files
     await unlink(tempPath).catch(() => { /* Ignore cleanup errors */ })

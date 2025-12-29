@@ -24,6 +24,7 @@ export class AgentConfigStore {
     temperature: 0.0,
     topP: 0.85,
     frequencyPenalty: 0.2,
+    screenshotQuality: 80,
   }
 
   private ensureSystemPrompt() {

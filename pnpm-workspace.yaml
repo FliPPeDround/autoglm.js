@@ -13,3 +13,4 @@ onlyBuiltDependencies:
   - esbuild
   - simple-git-hooks
   - electron
+  - sharp

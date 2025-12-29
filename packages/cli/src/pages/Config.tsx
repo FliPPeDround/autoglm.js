@@ -134,6 +134,12 @@ const configFields: Record<string, ConfigField[]> = {
       description: 'Interface display language',
       getValue: config => config.lang,
     },
+    {
+      key: 'screenshotQuality',
+      label: 'Screenshot Quality',
+      description: 'Quality of screenshots (1-100)',
+      getValue: config => config.screenshotQuality,
+    },
   ],
 }
 

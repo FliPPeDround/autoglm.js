@@ -142,7 +142,11 @@ export class PhoneAgent {
     this.stepCount++
 
     // Capture current screen state
-    const screenshot = await getScreenshot(this.agentConfig.deviceId)
+    const screenshot = await getScreenshot(
+      this.agentConfig.deviceId,
+      10,
+      this.agentConfig.screenshotQuality,
+    )
     const currentApp = await getCurrentApp(this.agentConfig.deviceId)
 
     // Build messages

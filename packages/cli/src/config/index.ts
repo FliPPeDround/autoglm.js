@@ -14,6 +14,7 @@ const DEFAULT_CONFIG: AgentConfigType = {
   temperature: 0.5,
   topP: 0.5,
   frequencyPenalty: 0.5,
+  screenshotQuality: 80,
 }
 
 export function loadCliConfig(customConfigPath?: string) {

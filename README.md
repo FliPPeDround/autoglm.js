@@ -18,42 +18,56 @@
 - 🧠 **智能决策**: 基于大语言模型的智能任务规划和执行
 - 🔧 **灵活配置**: 支持多种调用方式和配置选项
 - 🌍 **多语言支持**: 内置中英文支持
-- 📦 **易于集成**: 提供 CLI 和 API 两种使用方式
+- 📦 **多种使用方式**: 提供 CLI、API 和桌面应用三种使用方式
+
+## 🏗️ 架构概览
+
+AutoGLM.js 采用 Monorepo 架构，使用 pnpm workspace 和 Turbo 进行包管理和构建：
+
+```
+autoglm.js/
+├── packages/
+│   ├── core/           # 核心库 (autoglm.js)
+│   ├── cli/            # CLI 工具 (@autoglm.js/cli)
+│   └── shared/         # 共享工具 (@autoglm.js/shared)
+├── desktop/            # 桌面应用 (@autoglm/desktop)
+└── playground/         # 示例代码
+```
 
 ## 🚀 快速开始
-
-### 快捷使用
-
-```bash
-npx autoglm.js
-```
-
-### 安装
-
-```bash
-npm install autoglm.js
-```
 
 ### 环境要求
 
 - Node.js >= 18.0.0
+- pnpm >= 10.25.0
 - Android 设备（需要开启 USB 调试）
 - ADB (Android Debug Bridge) 工具
 
+### 安装
+
+```bash
+# 克隆仓库
+git clone https://github.com/flippedround/autoglm.js.git
+
+# 安装依赖
+cd autoglm.js
+pnpm install
+```
+
 ## 📖 使用方式
 
-AutoGLM.js 提供了两种使用方式：**CLI 命令行工具** 和 **API 集成**。
-
-> **CLI 命令行工具** 是一个方便的方式，用于快速使用 AutoGLM.js。
-> **API 集成** 则提供了更灵活的方式，用于在自定义应用中集成 AutoGLM.js 的功能。
+AutoGLM.js 提供三种使用方式：**CLI 命令行工具**、**核心 API 集成** 和 **桌面应用**。
 
 ### 方式一：CLI 命令行工具
 
-#### 1. 全局安装/快捷使用
+#### 1. 全局安装
 
 ```bash
-npm install -g autoglm.js // 全局安装
-npx autoglm.js // 快捷使用
+# 从 npm 安装
+npm install -g autoglm.js
+
+# 或使用 npx 快捷运行
+npx autoglm.js
 ```
 
 #### 2. 创建配置文件
@@ -90,15 +104,21 @@ CLI 会启动交互式界面，你可以输入自然语言指令：
 💬 请输入任务：打开微信并给张三发送"你好"
 ```
 
-### 方式二：API 集成
+### 方式二：核心 API 集成
 
-#### 1. 基础使用
+#### 1. 安装核心库
+
+```bash
+npm install autoglm.js
+```
+
+#### 2. 基础使用
 
 ```javascript
 import { AutoGLM } from 'autoglm.js'
 
 // 创建代理实例
-const agent = await AutoGLM.createAgent({
+const agent = new AutoGLM({
   maxSteps: 200,
   lang: 'cn',
   baseUrl: 'https://open.bigmodel.cn/api/paas/v4/',
@@ -111,35 +131,105 @@ const agent = await AutoGLM.createAgent({
 agent.run('打开微信并给张三发送"你好"')
 ```
 
-#### 2. 事件监听
+#### 3. 事件监听
 
 ```javascript
-const agent = await AutoGLM.createAgent()
-const handler = agent.run('打开微信并给张三发送"你好"')
-
-// 监听任务执行事件
-handler.on('thinking', (data) => {
-  console.log('思考中:', data)
+const agent = new AutoGLM({
+  baseUrl: 'https://open.bigmodel.cn/api/paas/v4/',
+  apiKey: 'your-api-key-here',
+  model: 'autoglm-phone',
 })
 
-handler.on('action', (result) => {
-  console.log('执行动作:', result)
+// 监听所有事件
+agent.on('*', (type, data) => {
+  console.log(`[${type}]`, data)
 })
 
-handler.on('task_complete', (result) => {
+// 监听特定事件
+agent.on('action', (data) => {
+  console.log('执行动作:', data)
+})
+
+agent.on('task_complete', (result) => {
   console.log('任务完成:', result)
 })
+
+// 执行任务
+agent.run('打开抖音')
+```
+
+#### 4. ADB 管理
+
+```javascript
+const agent = new AutoGLM({
+  baseUrl: 'https://open.bigmodel.cn/api/paas/v4/',
+  apiKey: 'your-api-key-here',
+  model: 'autoglm-phone',
+})
+
+// 获取 ADB 管理器
+const adb = agent.adb
+
+// 获取连接的设备列表
+const devices = await adb.getConnectedDevices()
+console.log('已连接设备:', devices)
+
+// 连接设备
+await adb.connect('192.168.1.100:5555')
+
+// 启用 TCP/IP 模式
+await adb.enableTCPIP(5555, 'device-id')
+
+// 检查键盘是否已安装
+const isInstalled = await adb.isKeyboardInstalled()
+
+// 安装键盘
+await adb.installKeyboard()
+```
+
+#### 5. 系统检查
+
+```javascript
+const agent = new AutoGLM({
+  baseUrl: 'https://open.bigmodel.cn/api/paas/v4/',
+  apiKey: 'your-api-key-here',
+  model: 'autoglm-phone',
+})
+
+// 检查系统要求
+const systemCheck = await agent.checkSystemRequirements()
+console.log('系统检查结果:', systemCheck)
+
+// 检查模型 API
+const apiCheck = await agent.checkModelApi()
+console.log('API 检查结果:', apiCheck)
+```
+
+### 方式三：桌面应用 [WIP]
+
+桌面应用正在开发中，将提供图形化界面来使用 AutoGLM.js 的所有功能。
+
+```bash
+# 开发模式
+pnpm dev:desktop
+
+# 构建
+pnpm build:desktop
+
+# 运行
+pnpm start
 ```
 
 ## ⚙️ 配置选项
 
 ### 基础配置
 
-| 参数       | 类型   | 默认值 | 说明                    |
-| ---------- | ------ | ------ | ----------------------- |
-| `maxSteps` | number | 100    | 最大执行步骤数          |
-| `lang`     | string | 'cn'   | 语言设置 ('cn' 或 'en') |
-| `deviceId` | string | -      | Android 设备 ID         |
+| 参数           | 类型   | 默认值 | 说明                    |
+| -------------- | ------ | ------ | ----------------------- |
+| `maxSteps`     | number | 100    | 最大执行步骤数          |
+| `lang`         | string | 'cn'   | 语言设置 ('cn' 或 'en') |
+| `deviceId`     | string | -      | Android 设备 ID         |
+| `systemPrompt` | string | -      | 自定义系统提示词        |
 
 ### 模型配置
 
@@ -164,14 +254,108 @@ git clone https://github.com/flippedround/autoglm.js.git
 # 安装依赖
 pnpm install
 
-# 开发模式
+# 开发模式（所有包）
 pnpm dev
 
-# 构建项目
+# 开发 CLI
+pnpm dev:cli
+
+# 开发核心库
+pnpm dev:core
+
+# 开发桌面应用
+pnpm dev:desktop
+```
+
+### 构建
+
+```bash
+# 构建所有包
 pnpm build
 
+# 构建 CLI
+pnpm build:cli
+
+# 构建核心库
+pnpm build:core
+
+# 构建桌面应用
+pnpm build:desktop
+```
+
+### 测试
+
+```bash
 # 运行测试
 pnpm test
+
+# 类型检查
+pnpm typecheck
+
+# 代码检查
+pnpm lint
+
+# 修复代码
+pnpm lint:fix
+```
+
+### 发布
+
+```bash
+# 发布核心库
+pnpm release:core
+
+# 发布 ADB 工具（Windows）
+pnpm release:adb_w
+
+# 发布 ADB 工具（Linux）
+pnpm release:adb_l
+
+# 发布 ADB 工具（macOS）
+pnpm release:adb_d
+```
+
+## 📁 项目结构
+
+```
+autoglm.js/
+├── packages/
+│   ├── core/                 # 核心库
+│   │   ├── src/
+│   │   │   ├── actions/      # 动作处理
+│   │   │   ├── adb/          # ADB 管理
+│   │   │   ├── agent/        # 代理核心
+│   │   │   ├── check/        # 系统检查
+│   │   │   ├── constants/    # 常量定义
+│   │   │   ├── context/      # 上下文管理
+│   │   │   ├── model/        # 模型客户端
+│   │   │   └── utils/        # 工具函数
+│   │   └── package.json
+│   ├── cli/                  # CLI 工具
+│   │   ├── src/
+│   │   │   ├── commands/     # 命令定义
+│   │   │   ├── components/   # React 组件
+│   │   │   ├── config/       # 配置管理
+│   │   │   ├── context/      # 上下文
+│   │   │   ├── hooks/        # 自定义 Hooks
+│   │   │   ├── layouts/      # 布局
+│   │   │   ├── locales/      # 国际化
+│   │   │   ├── pages/        # 页面
+│   │   │   ├── router/       # 路由
+│   │   │   └── store/        # 状态管理
+│   │   └── package.json
+│   └── shared/               # 共享工具
+│       └── src/
+├── desktop/                 # 桌面应用
+│   ├── src/
+│   │   ├── main/            # Electron 主进程
+│   │   ├── preload/         # 预加载脚本
+│   │   └── renderer/        # 渲染进程（Vue）
+│   └── package.json
+├── playground/              # 示例代码
+├── turbo.json              # Turbo 配置
+├── pnpm-workspace.yaml     # pnpm workspace 配置
+└── package.json            # 根 package.json
 ```
 
 ## 📋 示例任务
@@ -224,7 +408,7 @@ pnpm test
 
 ```javascript
 // 监听所有事件
-emitter.on('*', (event, data) => {
+agent.on('*', (event, data) => {
   console.log(`[${event}]`, data)
 })
 ```

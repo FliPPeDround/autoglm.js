@@ -11,6 +11,7 @@ export interface AgentConfigType {
   temperature: number
   topP: number
   frequencyPenalty: number
+  screenshotQuality?: number
 }
 
 export interface EventData {
