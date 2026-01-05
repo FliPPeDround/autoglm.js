@@ -1,14 +1,22 @@
 import type { DeviceInfo } from './types'
 import { exec } from 'tinyexec'
 import { CONNECTION_TYPE } from './constants'
+import { ADBAutoInstaller } from './installer'
 
 export class ADBConnection {
+  adb: string
+
+  constructor() {
+    const autoInstaller = new ADBAutoInstaller()
+    this.adb = autoInstaller.adb
+  }
+
   /**
    * Get ADB version.
    */
   async version() {
     try {
-      const result = await exec('adb', ['version'])
+      const result = await exec(this.adb, ['version'])
       const versionLine = result.stdout.trim().split('\n')[0]
       const versionMatch = versionLine.match(/(\d+\.\d+\.\d+)/)
       const version = versionMatch ? versionMatch[1] : null
@@ -28,7 +36,7 @@ export class ADBConnection {
    */
   async connect(address: string) {
     try {
-      const result = await exec('adb', ['connect', address])
+      const result = await exec(this.adb, ['connect', address])
       const stdout = result.stdout.trim()
       if (stdout.includes('connected to') || stdout.includes('already connected')) {
         return { success: true, message: stdout }
@@ -51,7 +59,7 @@ export class ADBConnection {
   async disconnect(address?: string) {
     try {
       const args = address ? ['disconnect', address] : ['disconnect']
-      const result = await exec('adb', args)
+      const result = await exec(this.adb, args)
       return { success: true, message: result.stdout.trim() }
     }
     catch (error) {
@@ -68,7 +76,7 @@ export class ADBConnection {
   async enableTCPIP(port: number = 5555, deviceId?: string) {
     try {
       const args = deviceId ? ['-s', deviceId, 'tcpip', port.toString()] : ['tcpip', port.toString()]
-      const result = await exec('adb', args)
+      const result = await exec(this.adb, args)
       return { success: true, message: result.stdout.trim() }
     }
     catch (error) {
@@ -85,7 +93,7 @@ export class ADBConnection {
   async getDeviceIp(deviceId?: string) {
     try {
       const args = deviceId ? ['-s', deviceId, 'shell', 'ip', 'addr', 'show', 'wlan0'] : ['shell', 'ip', 'addr', 'show', 'wlan0']
-      const result = await exec('adb', args)
+      const result = await exec(this.adb, args)
 
       const ipMatch = result.stdout.match(/inet\s+(\d+\.\d+\.\d+\.\d+)/)
       return ipMatch ? ipMatch[1] : null
@@ -99,7 +107,7 @@ export class ADBConnection {
    * List all connected devices.
    */
   async listDevices(): Promise<DeviceInfo[]> {
-    const result = await exec('adb', ['devices', '-l'])
+    const result = await exec(this.adb, ['devices', '-l'])
     const lines = result.stdout.trim().split('\n')
 
     // Skip the first line (header)
@@ -162,7 +170,7 @@ export class ADBConnection {
    */
   private async getDeviceProp(deviceId: string, prop: string): Promise<string | null> {
     try {
-      const result = await exec('adb', ['-s', deviceId, 'shell', 'getprop', prop])
+      const result = await exec(this.adb, ['-s', deviceId, 'shell', 'getprop', prop])
       const value = result.stdout.trim()
       return value || null
     }
@@ -176,7 +184,7 @@ export class ADBConnection {
    */
   async devices() {
     try {
-      const result = await exec('adb', ['devices'])
+      const result = await exec(this.adb, ['devices'])
       const lines = result.stdout.trim().split('\n')
       const devices = lines.slice(1).filter(line => line.trim() && line.includes('\tdevice'))
       if (devices.length === 0) {

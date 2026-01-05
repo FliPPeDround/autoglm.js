@@ -23,6 +23,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "dev": "turbo dev",
+    "play": "cd playground && pnpm play",
     "play:cli": "cd packages/cli && pnpm start",
     "test": "turbo test --filter=!@autoglm/desktop",
     "dev:cli": "turbo dev --filter=autoglm.js --filter=@autoglm.js/cli",
@@ -36,6 +37,7 @@
     "release:adb_w": "cd packages/assets/platform-tools-windows && pnpm release",
     "release:adb_l": "cd packages/assets/platform-tools-linux && pnpm release",
     "release:adb_d": "cd packages/assets/platform-tools-darwin && pnpm release",
+    "release:keyboard": "cd packages/assets/adb-keyboard && pnpm release",
     "typecheck": "turbo typecheck",
     "prepare": "simple-git-hooks"
   },

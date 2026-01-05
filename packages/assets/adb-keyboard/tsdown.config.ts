@@ -1,9 +1,11 @@
 import { defineConfig } from 'tsdown'
 
 export default defineConfig({
-  entry: ['src/index.tsx'],
-  dts: false,
-  exports: false,
+  entry: [
+    'src/index.ts',
+  ],
+  dts: true,
+  exports: true,
   publint: true,
   external: [
     'autoglm.js',

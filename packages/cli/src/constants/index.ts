@@ -1,3 +1,6 @@
+import { join } from 'node:path'
+import { AUTOGLM_FILEPATH } from 'autoglm.js'
+
 export const APP_NAME = 'AutoGLM.js'
 
 export const EVENT_TYPE_LABELS: Record<string, { label: string, color: string }> = {
@@ -13,6 +16,13 @@ export const DEFAULT_CONFIG = {
   maxSteps: 100,
   lang: 'cn' as const,
   baseUrl: 'https://open.bigmodel.cn/api/paas/v4/',
+  apiKey: '',
   model: 'autoglm-phone',
-  apiKey: '74fab98ebabd483a9fb88e311c14f61c.OIQrXM8thm8vSxo1',
+  maxTokens: 2048,
+  temperature: 0.5,
+  topP: 0.5,
+  frequencyPenalty: 0.5,
+  screenshotQuality: 80,
 }
+
+export const AUTOGLM_CONFIG_FILEPATH = join(AUTOGLM_FILEPATH, 'config.json')

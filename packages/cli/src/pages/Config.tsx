@@ -1,6 +1,7 @@
 import { join } from 'node:path'
 import { AUTOGLM_FILEPATH } from 'autoglm.js'
 import { Box, Text } from 'ink'
+import { useTranslation } from 'react-i18next'
 import { useAgentContext } from '@/context/AgentContext'
 
 interface ConfigSectionProps {
@@ -59,8 +60,8 @@ function ConfigItem({ label, value, description, color = 'white', important = fa
 
 interface ConfigField {
   key: string
-  label: string
-  description: string
+  labelKey: string
+  descriptionKey: string
   important?: boolean
   getValue: (config: any) => string | number | undefined
 }
@@ -69,22 +70,22 @@ const configFields: Record<string, ConfigField[]> = {
   api: [
     {
       key: 'baseUrl',
-      label: 'Base URL',
-      description: 'Base URL for API service',
+      labelKey: 'baseUrl',
+      descriptionKey: 'baseUrlDesc',
       important: true,
       getValue: config => config.baseUrl,
     },
     {
       key: 'apiKey',
-      label: 'API Key',
-      description: 'API key for authentication',
+      labelKey: 'apiKey',
+      descriptionKey: 'apiKeyDesc',
       important: true,
       getValue: config => config.apiKey ? `${config.apiKey.slice(0, 10)}*****${config.apiKey.slice(-10)}` : 'Not Set',
     },
     {
       key: 'model',
-      label: 'Model',
-      description: 'AI model name to use',
+      labelKey: 'model',
+      descriptionKey: 'modelDesc',
       important: true,
       getValue: config => config.model,
     },
@@ -92,52 +93,52 @@ const configFields: Record<string, ConfigField[]> = {
   generation: [
     {
       key: 'maxTokens',
-      label: 'Max Tokens',
-      description: 'Maximum length of generated text',
+      labelKey: 'maxTokens',
+      descriptionKey: 'maxTokensDesc',
       getValue: config => config.maxTokens,
     },
     {
       key: 'temperature',
-      label: 'Temperature',
-      description: 'Controls randomness of generated text (0-1)',
+      labelKey: 'temperature',
+      descriptionKey: 'temperatureDesc',
       getValue: config => config.temperature,
     },
     {
       key: 'topP',
-      label: 'Top P',
-      description: 'Nucleus sampling parameter for vocabulary selection',
+      labelKey: 'topP',
+      descriptionKey: 'topPDesc',
       getValue: config => config.topP,
     },
     {
       key: 'frequencyPenalty',
-      label: 'Frequency Penalty',
-      description: 'Reduces repetition of words',
+      labelKey: 'frequencyPenalty',
+      descriptionKey: 'frequencyPenaltyDesc',
       getValue: config => config.frequencyPenalty,
     },
   ],
   system: [
     {
       key: 'deviceId',
-      label: 'Device ID',
-      description: 'Unique device identifier',
+      labelKey: 'deviceId',
+      descriptionKey: 'deviceIdDesc',
       getValue: config => config.deviceId,
     },
     {
       key: 'maxSteps',
-      label: 'Max Steps',
-      description: 'Maximum execution steps',
+      labelKey: 'maxSteps',
+      descriptionKey: 'maxStepsDesc',
       getValue: config => config.maxSteps,
     },
     {
       key: 'lang',
-      label: 'Language',
-      description: 'Interface display language',
+      labelKey: 'lang',
+      descriptionKey: 'langDesc',
       getValue: config => config.lang,
     },
     {
       key: 'screenshotQuality',
-      label: 'Screenshot Quality',
-      description: 'Quality of screenshots (1-100)',
+      labelKey: 'screenshotQuality',
+      descriptionKey: 'screenshotQualityDesc',
       getValue: config => config.screenshotQuality,
     },
   ],
@@ -145,13 +146,17 @@ const configFields: Record<string, ConfigField[]> = {
 
 export default function Config() {
   const { getConfig } = useAgentContext()
+  const { t } = useTranslation()
 
   const sectionTitles: Record<string, string> = {
-    api: 'API Settings',
-    generation: 'Generation Parameters',
-    system: 'System Settings',
+    api: t('config.apiSettings'),
+    generation: t('config.generationParameters'),
+    system: t('config.systemSettings'),
   }
   const config = getConfig()
+
+  const getFieldLabel = (key: string) => t(`config.${key}`)
+  const getFieldDescription = (key: string) => t(`config.${key}`)
 
   return (
     <Box flexDirection="column" paddingX={2} paddingY={1}>
@@ -160,9 +165,9 @@ export default function Config() {
         {configFields.api.map(field => (
           <ConfigItem
             key={field.key}
-            label={field.label}
+            label={getFieldLabel(field.labelKey)}
             value={field.getValue(config)}
-            description={field.description}
+            description={getFieldDescription(field.descriptionKey)}
             important={field.important}
           />
         ))}
@@ -173,9 +178,9 @@ export default function Config() {
         {configFields.generation.map(field => (
           <ConfigItem
             key={field.key}
-            label={field.label}
+            label={getFieldLabel(field.labelKey)}
             value={field.getValue(config)}
-            description={field.description}
+            description={getFieldDescription(field.descriptionKey)}
             important={field.important}
           />
         ))}
@@ -186,16 +191,16 @@ export default function Config() {
         {configFields.system.map(field => (
           <ConfigItem
             key={field.key}
-            label={field.label}
+            label={getFieldLabel(field.labelKey)}
             value={field.getValue(config)}
-            description={field.description}
+            description={getFieldDescription(field.descriptionKey)}
             important={field.important}
           />
         ))}
       </ConfigSection>
 
       {config.systemPrompt && (
-        <ConfigSection title="System Prompt">
+        <ConfigSection title={t('config.systemPrompt')}>
           <Box marginBottom={1}>
             <Text color="white">
               {config.systemPrompt.length > 80
@@ -205,16 +210,20 @@ export default function Config() {
           </Box>
           <Box>
             <Text color="gray" dimColor>
-              System prompt to guide AI behavior and response style
+              {t('systemPrompt.description')}
             </Text>
           </Box>
         </ConfigSection>
       )}
 
       <Box marginBottom={1}>
-        <Text color="white" bold>Configuration Tip: </Text>
+        <Text color="white" bold>
+          {t('configTip.title')}
+          :
+          {' '}
+        </Text>
         <Text color="gray" dimColor>
-          Create a config file at
+          {t('configTip.createConfigFile')}
           {' '}
           {join(AUTOGLM_FILEPATH, 'config.json')}
         </Text>

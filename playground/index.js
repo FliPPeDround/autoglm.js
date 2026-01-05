@@ -10,7 +10,7 @@ async function main() {
   })
 
   // agent.on('*', (type, message) => {
-  //   console.log(type, message)
+  //   // console.log(type, message)
   // })
   agent.run('打开抖音')
 }

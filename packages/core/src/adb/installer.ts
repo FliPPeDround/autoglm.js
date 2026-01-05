@@ -1,13 +1,14 @@
+import { execSync } from 'node:child_process'
 import path from 'node:path'
-import process from 'node:process'
 import fs from 'fs-extra'
 import { isLinux, isMacOS, isWindows } from 'std-env'
 import { AUTOGLM_FILEPATH } from '@/constants'
 
 export class ADBAutoInstaller {
   private installPath: string
-  private adbPath: string
+  public adbPath: string
   private platformToolsPath: string
+  private globalADBChecked: boolean | null = null
 
   constructor(customPlatformToolsPath?: string) {
     this.installPath = AUTOGLM_FILEPATH
@@ -17,12 +18,13 @@ export class ADBAutoInstaller {
   }
 
   async install() {
-    await fs.ensureDir(this.installPath)
     // check if adb file exists
     if (await this.check()) {
-      this.setupEnvironmentVariables()
       return
     }
+
+    await fs.ensureDir(this.installPath)
+
     if (isMacOS) {
       const { installADB } = await import('@autoglm.js/platform-tools-darwin')
       await installADB(this.installPath)
@@ -35,16 +37,29 @@ export class ADBAutoInstaller {
       const { installADB } = await import('@autoglm.js/platform-tools-windows')
       await installADB(this.installPath)
     }
-    this.setupEnvironmentVariables()
-  }
-
-  setupEnvironmentVariables() {
-    if (!process.env.PATH?.includes(this.platformToolsPath)) {
-      process.env.PATH = `${process.env.PATH};${this.platformToolsPath}`
-    }
   }
 
   async check() {
     return await fs.pathExists(this.adbPath)
+  }
+
+  checkGlobalADB() {
+    if (this.globalADBChecked !== null) {
+      return this.globalADBChecked
+    }
+    try {
+      execSync('adb version', { stdio: 'ignore' })
+      this.globalADBChecked = true
+      return true
+    }
+    catch {
+      this.globalADBChecked = false
+      return false
+    }
+  }
+
+  get adb() {
+    const isGlobal = this.checkGlobalADB()
+    return isGlobal ? 'adb' : this.adbPath
   }
 }

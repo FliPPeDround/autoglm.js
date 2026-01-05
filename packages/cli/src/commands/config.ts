@@ -9,53 +9,43 @@ export interface CommandHandler {
 
 export const commands: CommandHandler[] = [
   {
-    name: 'help',
-    description: 'Show help information',
-    execute: () => {
-      console.log('Available commands:')
-      commands.forEach((cmd) => {
-        console.log(`  /${cmd.name.padEnd(10)} - ${cmd.description}`)
-      })
-    },
-  },
-  {
     name: 'exit',
-    description: 'Exit the application',
+    description: 'commands.exit',
     execute: () => {
       process.exit(0)
     },
   },
   {
     name: 'home',
-    description: 'Navigate to home page',
+    description: 'commands.home',
     execute: (context) => {
       context.navigate('/')
     },
   },
   {
     name: 'tasks',
-    description: 'Navigate to tasks page',
+    description: 'commands.tasks',
     execute: (context) => {
       context.navigate('/tasks')
     },
   },
   {
     name: 'config',
-    description: 'View current configuration',
+    description: 'commands.config',
     execute: (context) => {
       context.navigate('/config')
     },
   },
   {
     name: 'devices',
-    description: 'View and select connected devices',
+    description: 'commands.devices',
     execute: (context) => {
       context.navigate('/devices')
     },
   },
   {
     name: 'abort',
-    description: 'Abort the current task',
+    description: 'commands.abort',
     execute: (context) => {
       context.abort('User aborted the task')
     },

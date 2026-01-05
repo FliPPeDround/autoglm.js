@@ -1,5 +1,6 @@
 import { Box, Text } from 'ink'
 import Spinner from 'ink-spinner'
+import { useTranslation } from 'react-i18next'
 
 interface TaskStatusProps {
   isRunning: boolean
@@ -8,6 +9,8 @@ interface TaskStatusProps {
 }
 
 export default function TaskStatus({ isRunning, currentTask }: TaskStatusProps) {
+  const { t } = useTranslation()
+
   if (!isRunning && !currentTask) {
     return null
   }
@@ -19,7 +22,7 @@ export default function TaskStatus({ isRunning, currentTask }: TaskStatusProps) 
           <Text color="gray">STATUS:</Text>
         </Box>
         <Text color={isRunning ? 'cyan' : 'green'} bold>
-          {isRunning ? 'RUNNING' : 'IDLE'}
+          {isRunning ? t('tasks.running') : t('tasks.idle')}
           {isRunning && <Spinner type="dots" />}
         </Text>
       </Box>
@@ -32,14 +35,6 @@ export default function TaskStatus({ isRunning, currentTask }: TaskStatusProps) 
           <Text color="white">{currentTask}</Text>
         </Box>
       )}
-      {/* {currentDeviceId && (
-        <Box gap={2}>
-          <Box width={8}>
-            <Text color="gray">DEVICE:</Text>
-          </Box>
-          <Text color="white">{currentDeviceId}</Text>
-        </Box>
-      )} */}
     </Box>
   )
 }

@@ -1,27 +1,27 @@
+import i18next from 'i18next'
+import { initReactI18next } from 'react-i18next'
 import enUS from './en-US'
 import zhCN from './zh-CN'
 
-const t_map = {
-  cn: zhCN,
-  en: enUS,
-} as Record<string, any>
+// 初始化i18next
+i18next
+  .use(initReactI18next)
+  .init({
+    resources: {
+      en: {
+        translation: enUS,
+      },
+      zh: {
+        translation: zhCN,
+      },
+    },
+    lng: 'zh', // 默认语言
+    fallbackLng: 'en', // 回退语言
+    interpolation: {
+      escapeValue: false, // React已经处理了XSS
+    },
+  })
 
-const locale: string = 'cn'
-
-export function $t(key: string) {
-  const message = t_map[locale] || t_map.cn
-
-  const keys = key.split('.')
-  let result = message
-
-  for (const k of keys) {
-    if (result && typeof result === 'object' && k in result) {
-      result = result[k]
-    }
-    else {
-      return key
-    }
-  }
-
-  return result
-}
+// 导出i18next实例和类型
+export default i18next
+export { useTranslation } from 'react-i18next'
