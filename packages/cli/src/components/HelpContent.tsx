@@ -48,7 +48,7 @@ export function HelpContent({ content }: HelpContentProps) {
         </Text>
         {content.errorCode && (
           <Text color="gray" dimColor>
-            {t('Error Code:')}
+            Error Code:
             {' '}
             {content.errorCode}
           </Text>
@@ -60,12 +60,19 @@ export function HelpContent({ content }: HelpContentProps) {
       ))}
 
       {content.footer && (
-        <Box marginTop={2}>
+        <Box marginTop={1}>
           <Text color={content.footer.color || 'green'} bold>
             {t(content.footer.text)}
           </Text>
         </Box>
       )}
+
+      <Box marginTop={2}>
+        <Text color="cyan" dimColor>
+          {t('help.feedback.prompt')}
+          : https://github.com/FliPPeDround/autoglm.js/issues
+        </Text>
+      </Box>
     </Box>
   )
 }

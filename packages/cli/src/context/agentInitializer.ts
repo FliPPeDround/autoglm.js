@@ -1,5 +1,7 @@
 import type { AutoGLM } from 'autoglm.js'
 import type { NavigateFunction } from 'react-router'
+import process from 'node:process'
+import { sleep } from '@autoglm.js/shared'
 import { ErrorCode } from 'autoglm.js'
 import fs from 'fs-extra'
 import { AUTOGLM_CONFIG_FILEPATH } from '@/constants'
@@ -39,7 +41,7 @@ export async function initializeAgent(options: InitializeAgentOptions) {
   // ensure adb platform tools
   await ensureADBAble(agent, navigate)
   setSystemCheck(true)
-  const apiCheck = await checkModelApi(agent)
+  const apiCheck = await checkModelApi(agent, navigate)
   setApiCheck(apiCheck)
 }
 
@@ -94,8 +96,8 @@ async function ensureADBAble(agent: AutoGLM, navigate: NavigateFunction): Promis
 
       case SystemStatus.NEED_DEVICE: {
         navigate('/help', { state: { code: ErrorCode.ADB_DEVICE_UNCONNECTED } })
-        status = SystemStatus.CHECKING
-        break
+        await sleep(1000)
+        process.exit(0)
       }
     }
   }
@@ -107,13 +109,22 @@ async function ensureConfigFileExists(configPath: string, defaultConfig: Record<
   }
 }
 
-async function checkModelApi(agent: AutoGLM): Promise<boolean> {
+async function checkModelApi(agent: AutoGLM, navigate: NavigateFunction): Promise<boolean> {
   try {
     const result = await agent.checkModelApi()
-    return result.success
+    console.log(result)
+    if (result.success) {
+      return true
+    }
+
+    navigate('/help', { state: { code: ErrorCode.MODEL_API_CHECK_FAILED } })
+    await sleep(1000)
+    process.exit(0)
   }
   catch {
-    return false
+    navigate('/help', { state: { code: ErrorCode.MODEL_API_CHECK_FAILED } })
+    await sleep(1000)
+    process.exit(0)
   }
 }
 

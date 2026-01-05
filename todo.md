@@ -9,6 +9,7 @@
 [x] cli国际化
 [x] 改为流式输出
 [x] ACTION显示更多信息
+[x] api检查未通过时，出现提示画面
 [ ] publish to npm
 [ ] 官网
 [ ] 推广

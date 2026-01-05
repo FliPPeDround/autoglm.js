@@ -256,6 +256,9 @@ importers:
       tinyexec:
         specifier: ^1.0.2
         version: 1.0.2
+      unzipper:
+        specifier: ^0.12.3
+        version: 0.12.3
     devDependencies:
       '@autoglm.js/shared':
         specifier: workspace:*

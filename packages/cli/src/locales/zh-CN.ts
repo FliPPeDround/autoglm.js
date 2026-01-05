@@ -1,3 +1,8 @@
+import { join } from 'node:path'
+import { AUTOGLM_FILEPATH } from 'autoglm.js'
+
+const configFilePath = join(AUTOGLM_FILEPATH, 'config.json')
+
 export default {
   welcome: {
     enterTask: '输入您的任务',
@@ -105,8 +110,37 @@ export default {
       dataCable: '• 检查USB线是否支持数据传输（部分充电线仅支持充电）',
       footer: '完成以上步骤后，请重新尝试连接设备',
     },
+    modelApiCheckFailed: {
+      title: '模型API配置错误',
+      problemDescription: '问题描述',
+      apiCheckFailed: '模型API请求失败',
+      checkConfig: '请检查您的配置文件设置',
+      solution: '解决方案',
+      openConfigFile: '打开配置文件',
+      configFilePath: `   • 位置： ${configFilePath}`,
+      checkBaseUrl: '检查Base URL配置',
+      baseUrlExample: '   • 确保baseUrl正确（例如：https://open.bigmodel.cn/api/paas/v4/）',
+      checkApiKey: '检查API Key配置',
+      apiKeyNotEmpty: '   • 确保apiKey不为空',
+      apiKeyValid: '   • 验证API密钥有效且具有足够权限',
+      checkModel: '检查Model配置',
+      modelExample: '   • 确保模型名称正确（例如：autoglm-phone）',
+      verifyConnection: '验证网络连接',
+      networkCheck: '   • 检查您的网络是否可以访问API服务',
+      apiAvailable: '   • 确认API服务可用',
+      commonIssues: '常见问题',
+      invalidBaseUrl: '• Base URL格式错误或服务不可用',
+      invalidApiKey: '• API密钥无效、已过期或权限不足',
+      modelNotFound: '• 模型名称不存在或不支持',
+      networkError: '• 网络连接问题或防火墙阻止',
+      quotaExceeded: '• API配额已用完或账户余额不足',
+      footer: '修正配置后，请重新启动应用程序',
+    },
     contactSupport: '或联系技术支持获取更多帮助',
     noSpecificHelp: '如需特定错误的帮助信息，请从错误页面跳转至此',
+    feedback: {
+      prompt: '反馈问题',
+    },
   },
   version: {
     title: '版本信息',

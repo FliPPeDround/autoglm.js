@@ -1,3 +1,8 @@
+import { join } from 'node:path'
+import { AUTOGLM_FILEPATH } from 'autoglm.js'
+
+const configFilePath = join(AUTOGLM_FILEPATH, 'config.json')
+
 export default {
   welcome: {
     enterTask: 'Enter Your Task Below',
@@ -105,8 +110,37 @@ export default {
       dataCable: '• Check if the USB cable supports data transfer (some charging cables only support charging)',
       footer: 'After completing the above steps, please try connecting the device again',
     },
+    modelApiCheckFailed: {
+      title: 'Model API Configuration Error',
+      problemDescription: 'Problem Description',
+      apiCheckFailed: 'Model API request failed',
+      checkConfig: 'Please check your configuration file settings',
+      solution: 'Solution',
+      openConfigFile: 'Open the configuration file',
+      configFilePath: `   • Location: ${configFilePath}`,
+      checkBaseUrl: 'Check Base URL configuration',
+      baseUrlExample: '   • Ensure baseUrl is correct (e.g., https://open.bigmodel.cn/api/paas/v4/)',
+      checkApiKey: 'Check API Key configuration',
+      apiKeyNotEmpty: '   • Ensure apiKey is not empty',
+      apiKeyValid: '   • Verify the API key is valid and has sufficient permissions',
+      checkModel: 'Check Model configuration',
+      modelExample: '   • Ensure model name is correct (e.g., autoglm-phone)',
+      verifyConnection: 'Verify network connection',
+      networkCheck: '   • Check if your network can access the API service',
+      apiAvailable: '   • Confirm the API service is available',
+      commonIssues: 'Common Issues',
+      invalidBaseUrl: '• Base URL format is incorrect or service is unavailable',
+      invalidApiKey: '• API key is invalid, expired, or has insufficient permissions',
+      modelNotFound: '• Model name does not exist or is not supported',
+      networkError: '• Network connection issue or firewall blocking',
+      quotaExceeded: '• API quota exceeded or account balance insufficient',
+      footer: 'After correcting the configuration, please restart the application',
+    },
     contactSupport: 'Or contact technical support for more help',
     noSpecificHelp: 'For help with specific errors, please jump to this page from the error page',
+    feedback: {
+      prompt: 'Feedback',
+    },
   },
   version: {
     title: 'Version Info',
