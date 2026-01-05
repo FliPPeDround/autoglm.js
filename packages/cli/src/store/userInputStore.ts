@@ -1,5 +1,6 @@
 import type { AgentContextValue } from '@/config/types'
 import type { RoutePath } from '@/router/routes'
+import { sleep } from '@autoglm.js/shared'
 import { create } from 'zustand'
 import { executeCommand } from '@/commands/commands'
 
@@ -27,13 +28,17 @@ export const useUserInputStore = create<UserInputState>((set) => {
       })
     },
 
-    handleSubmit: (value, context, navigate) => {
+    handleSubmit: async (value, context, navigate) => {
       set({ query: '' })
       if (isCommandQuery(value)) {
         return
       }
       if (value.trim() === '') {
         return
+      }
+      if (context.isRunning) {
+        context.abort()
+        await sleep(500)
       }
       context.run(value)
       navigate('/tasks')

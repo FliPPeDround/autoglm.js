@@ -5,6 +5,7 @@ import { ScrollList } from 'ink-scroll-list'
 import { useMemo, useRef, useState } from 'react'
 import { getAllCommands } from '@/commands/commands'
 import { useAgentContext } from '@/context/AgentContext'
+import { useTranslation } from '@/locales'
 import { useUserInputStore } from '@/store/userInputStore'
 
 interface CommandMenuProps {
@@ -14,6 +15,7 @@ interface CommandMenuProps {
 }
 
 export function CommandMenu({ query, commands, onCommandSelect }: CommandMenuProps) {
+  const { t } = useTranslation()
   const listRef = useRef<ScrollListRef>(null)
   const [selectedIndex, setSelectedIndex] = useState(0)
 
@@ -63,7 +65,7 @@ export function CommandMenu({ query, commands, onCommandSelect }: CommandMenuPro
             </Box>
             <Box flexGrow={1}>
               <Text color={i === selectedIndex ? 'cyan' : 'gray'}>
-                {cmd.description}
+                {t(cmd.description)}
               </Text>
             </Box>
           </Box>

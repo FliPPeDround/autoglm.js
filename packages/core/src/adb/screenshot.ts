@@ -3,9 +3,8 @@ import { unlink } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import sharp from 'sharp'
-import { exec } from 'tinyexec'
-
 import { Screenshot } from './types'
+import { runAdbCommand } from './utils'
 /**
  * Take a screenshot and return it as a base64 encoded string.
  * Similar to the Python version, saves to temp file first then converts to base64.
@@ -16,12 +15,10 @@ export async function getScreenshot(
   quality: number = 80,
 ): Promise<Screenshot> {
   const tempPath = join(tmpdir(), `screenshot_${randomUUID()}.png`)
-  const devicePrefix = deviceId ? ['-s', deviceId] : []
 
   try {
     // Get screen dimensions first
-    const dimensionArgs = deviceId ? ['-s', deviceId, 'shell', 'wm', 'size'] : ['shell', 'wm', 'size']
-    const dimensionResult = await exec('adb', dimensionArgs)
+    const dimensionResult = await runAdbCommand(deviceId, ['shell', 'wm', 'size'])
 
     // Parse dimensions
     const dimensionMatch = dimensionResult.stdout.match(/Physical size: (\d+)x(\d+)/)
@@ -33,8 +30,7 @@ export async function getScreenshot(
     const height = Number.parseInt(dimensionMatch[2], 10)
 
     // Take screenshot and save to device temp location
-    const screenshotArgs = [...devicePrefix, 'shell', 'screencap', '-p', '/sdcard/tmp_screenshot.png']
-    const screenshotResult = await exec('adb', screenshotArgs, { timeout: timeout * 1000 })
+    const screenshotResult = await runAdbCommand(deviceId, ['shell', 'screencap', '-p', '/sdcard/tmp_screenshot.png'], timeout * 1000)
 
     // Check for screenshot failure (sensitive screen)
     const output = screenshotResult.stdout + screenshotResult.stderr
@@ -43,8 +39,7 @@ export async function getScreenshot(
     }
 
     // Pull screenshot to local temp path
-    const pullArgs = [...devicePrefix, 'pull', '/sdcard/tmp_screenshot.png', tempPath]
-    await exec('adb', pullArgs, { timeout: 5000 })
+    await runAdbCommand(deviceId, ['pull', '/sdcard/tmp_screenshot.png', tempPath], timeout * 5000)
 
     // Read and encode image
     // const imageBuffer = await readFile(tempPath)
@@ -71,8 +66,7 @@ export async function getScreenshot(
     await unlink(tempPath).catch(() => { /* Ignore cleanup errors */ })
 
     // Cleanup device temp file (fire and forget)
-    const cleanupArgs = [...devicePrefix, 'shell', 'rm', '/sdcard/tmp_screenshot.png']
-    exec('adb', cleanupArgs)
+    await runAdbCommand(deviceId, ['shell', 'rm', '/sdcard/tmp_screenshot.png'])
     return new Screenshot(base64Data, width, height)
   }
   catch (error) {

@@ -2,6 +2,7 @@ import type { ScrollListRef } from 'ink-scroll-list'
 import { Box, Text, useInput } from 'ink'
 import { ScrollList } from 'ink-scroll-list'
 import { useCallback, useMemo, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useAgentContext } from '@/context/AgentContext'
 import { useDeviceInfo } from '@/hooks/useAutoGLM'
 import { useUserInputStore } from '@/store/userInputStore'
@@ -13,8 +14,13 @@ interface DeviceItemProps {
 }
 
 function DeviceItem({ device, isSelected, isCurrentDevice }: DeviceItemProps) {
+  const { t } = useTranslation()
   const statusColor = device.status === 'device' ? 'green' : device.status === 'unauthorized' ? 'yellow' : 'red'
-  const statusText = device.status === 'device' ? 'ONLINE' : device.status.toUpperCase()
+  const statusText = device.status === 'device'
+    ? t('devices.online')
+    : device.status === 'unauthorized'
+      ? t('devices.unauthorized')
+      : t('devices.offline')
 
   return (
     <Box flexDirection="column" marginBottom={1}>
@@ -31,7 +37,9 @@ function DeviceItem({ device, isSelected, isCurrentDevice }: DeviceItemProps) {
           {isCurrentDevice && (
             <Text color="green" bold>
               {' '}
-              (Current)
+              (
+              {t('devices.current')}
+              )
             </Text>
           )}
         </Box>
@@ -45,7 +53,10 @@ function DeviceItem({ device, isSelected, isCurrentDevice }: DeviceItemProps) {
         <Box flexDirection="column" marginLeft={6}>
           <Box flexDirection="row">
             <Box width={15}>
-              <Text color="gray">Device ID:</Text>
+              <Text color="gray">
+                {t('devices.deviceId')}
+                :
+              </Text>
             </Box>
             <Box>
               <Text color="white">{device.deviceId}</Text>
@@ -53,7 +64,10 @@ function DeviceItem({ device, isSelected, isCurrentDevice }: DeviceItemProps) {
           </Box>
           <Box flexDirection="row">
             <Box width={15}>
-              <Text color="gray">Connection:</Text>
+              <Text color="gray">
+                {t('devices.connection')}
+                :
+              </Text>
             </Box>
             <Box>
               <Text color="white">{device.connectionType.toUpperCase()}</Text>
@@ -62,7 +76,10 @@ function DeviceItem({ device, isSelected, isCurrentDevice }: DeviceItemProps) {
           {device.brand && (
             <Box flexDirection="row">
               <Box width={15}>
-                <Text color="gray">Brand:</Text>
+                <Text color="gray">
+                  {t('devices.brand')}
+                  :
+                </Text>
               </Box>
               <Box>
                 <Text color="white">{device.brand}</Text>
@@ -72,13 +89,17 @@ function DeviceItem({ device, isSelected, isCurrentDevice }: DeviceItemProps) {
           {device.androidVersion && (
             <Box flexDirection="row">
               <Box width={15}>
-                <Text color="gray">Android:</Text>
+                <Text color="gray">
+                  {t('devices.android')}
+                  :
+                </Text>
               </Box>
               <Box>
                 <Text color="white">
                   {device.androidVersion}
                   {' '}
-                  (API
+                  (
+                  {t('devices.api')}
                   {' '}
                   {device.apiLevel}
                   )
@@ -93,11 +114,12 @@ function DeviceItem({ device, isSelected, isCurrentDevice }: DeviceItemProps) {
 }
 
 export default function Devices() {
-  const { updateConfig, getConfig } = useAgentContext()
+  const { updateConfig, getConfig, abort } = useAgentContext()
   const { devices, isRefreshing, refresh } = useDeviceInfo()
   const listRef = useRef<ScrollListRef>(null)
   const [selectedIndex, setSelectedIndex] = useState(0)
   const { isCommand } = useUserInputStore()
+  const { t } = useTranslation()
 
   const currentConfig = getConfig()
   const currentDeviceId = currentConfig.deviceId
@@ -111,9 +133,10 @@ export default function Devices() {
   const selectDevice = useCallback((index: number) => {
     const device = sortedDevices[index]
     if (device && device.deviceId !== currentDeviceId) {
+      abort()
       updateConfig({ deviceId: device.deviceId })
     }
-  }, [sortedDevices, currentDeviceId, updateConfig])
+  }, [sortedDevices, currentDeviceId, updateConfig, abort])
 
   useInput((_input, key) => {
     if (key.upArrow) {
@@ -136,7 +159,7 @@ export default function Devices() {
     <Box flexDirection="column" paddingX={2} paddingY={1}>
       <Box marginBottom={1}>
         <Text color="blue" bold>
-          Connected Devices
+          {t('devices.title')}
         </Text>
       </Box>
 
@@ -144,10 +167,10 @@ export default function Devices() {
         ? (
             <Box flexDirection="column">
               <Box marginBottom={1}>
-                <Text color="yellow">No devices connected</Text>
+                <Text color="yellow">{t('devices.noDevices')}</Text>
               </Box>
               <Box marginBottom={1}>
-                <Text color="gray">Press Ctrl+R to refresh device list</Text>
+                <Text color="gray">{t('devices.refreshHint')}</Text>
               </Box>
             </Box>
           )
@@ -157,12 +180,12 @@ export default function Devices() {
                 <Box width={4} />
                 <Box width={50}>
                   <Text color="gray" bold>
-                    Device
+                    {t('devices.device')}
                   </Text>
                 </Box>
                 <Box width={12}>
                   <Text color="gray" bold>
-                    Status
+                    {t('devices.status')}
                   </Text>
                 </Box>
               </Box>
@@ -184,7 +207,7 @@ export default function Devices() {
 
               <Box marginTop={1}>
                 <Text color="gray">
-                  Use ↑↓ to navigate, Enter to select device, Ctrl+R to refresh
+                  {t('devices.navigateHint')}
                 </Text>
               </Box>
             </Box>
@@ -192,7 +215,7 @@ export default function Devices() {
 
       {isRefreshing && (
         <Box marginTop={1}>
-          <Text color="cyan">Refreshing devices...</Text>
+          <Text color="cyan">{t('devices.refreshing')}</Text>
         </Box>
       )}
     </Box>

@@ -1,6 +1,9 @@
 import { Box, Text } from 'ink'
+import { useTranslation } from 'react-i18next'
 
 export default function Welcome() {
+  const { t } = useTranslation()
+
   return (
     <Box flexDirection="column" alignItems="center" marginBottom={4} marginTop={2}>
 
@@ -8,29 +11,25 @@ export default function Welcome() {
       <Box marginBottom={3} flexDirection="column" alignItems="center">
         <Box marginBottom={1}>
           <Text color="white" bold>
-            Enter your task below
+            {t('welcome.enterTask')}
           </Text>
         </Box>
         <Text color="gray" dimColor>
-          Example: "Open browser and search for AI news"
+          {t('welcome.example')}
         </Text>
       </Box>
 
       {/* Subtle Hints */}
       <Box flexDirection="column" alignItems="center" gap={1}>
         <Text color="gray" dimColor>
-          Press
+          {t('welcome.enter')}
           {' '}
-          <Text color="white">⏎ Enter</Text>
-          {' '}
-          to submit
+          {t('welcome.pressEnter')}
         </Text>
         <Text color="gray" dimColor>
-          Type
+          {t('welcome.slash')}
           {' '}
-          <Text color="white">/</Text>
-          {' '}
-          for commands
+          {t('welcome.typeSlash')}
         </Text>
       </Box>
     </Box>

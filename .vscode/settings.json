@@ -24,5 +24,19 @@
   ],
   "cSpell.words": [
     "autoglm"
-  ]
+  ],
+
+  "i18n-ally.localesPaths": [
+    "packages/cli/src/locales"
+  ],
+  "i18n-ally.enabledFrameworks": [
+    "react"
+  ],
+  "i18n-ally.displayLanguage": "zh-CN",
+  "i18n-ally.editor.preferEditor": true,
+  "i18n-ally.enabledParsers": [
+    "js",
+    "ts"
+  ],
+  "i18n-ally.keystyle": "nested"
 }

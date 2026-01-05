@@ -1,7 +1,7 @@
 import type { AgentEvent } from '@/config/types'
 import { useCallback, useMemo, useState } from 'react'
+import { EVENT_TYPE_LABELS } from '@/constants'
 import { useAgentContext } from '@/context/AgentContext'
-import { EVENT_TYPE_LABELS } from '@/utils/constants'
 
 export function useEventLog() {
   const { events, isRunning, clearEvents } = useAgentContext()

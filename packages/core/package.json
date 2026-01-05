@@ -56,6 +56,7 @@
     "tinyexec": "^1.0.2"
   },
   "optionalDependencies": {
+    "@autoglm.js/adb-keyboard": "workspace:*",
     "@autoglm.js/platform-tools-darwin": "workspace:*",
     "@autoglm.js/platform-tools-linux": "workspace:*",
     "@autoglm.js/platform-tools-windows": "workspace:*"

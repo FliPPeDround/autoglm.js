@@ -18,7 +18,7 @@
     "autoglm.js",
     "shared"
   ],
-  "sideEffects": true,
+  "sideEffects": false,
   "exports": {
     ".": "./src/index.ts",
     "./*": "./*"
@@ -35,10 +35,10 @@
     "src"
   ],
   "dependencies": {
+    "chmodr": "^2.0.2",
     "unzipper": "^0.12.3"
   },
   "devDependencies": {
-    "@types/unzipper": "^0.10.11",
-    "chmodr": "^2.0.2"
+    "@types/unzipper": "^0.10.11"
   }
 }

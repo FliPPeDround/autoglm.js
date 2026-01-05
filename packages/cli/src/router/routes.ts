@@ -2,7 +2,7 @@ import type { ComponentType, LazyExoticComponent } from 'react'
 
 import { lazy } from 'react'
 
-export type RoutePath = '/' | '/tasks' | '/config' | '/devices'
+export type RoutePath = '/' | '/tasks' | '/config' | '/devices' | '/help' | '/install-keyboard'
 
 export interface RouteConfig {
   path: RoutePath
@@ -31,6 +31,16 @@ export const routes: RouteConfig[] = [
     component: lazy(() => import('@/pages/Devices')),
     label: 'Devices',
   },
+  {
+    path: '/help',
+    component: lazy(() => import('@/pages/Help')),
+    label: 'Help',
+  },
+  {
+    path: '/install-keyboard',
+    component: lazy(() => import('@/pages/InstallKeyboard')),
+    label: 'InstallKeyboard',
+  },
 ]
 
 export const routePaths = {
@@ -38,4 +48,6 @@ export const routePaths = {
   TASKS: '/tasks',
   CONFIG: '/config',
   DEVICES: '/devices',
+  HELP: '/help',
+  INSTALL_KEYBOARD: '/install-keyboard',
 } as const

@@ -2,9 +2,12 @@ import type { AgentConfigType, DeviceInfo, EventData } from 'autoglm.js'
 import type { ReactNode } from 'react'
 import type { AgentContextValue, AgentEvent } from '@/config/types'
 import { AutoGLM, EventType } from 'autoglm.js'
-
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router'
+import { AUTOGLM_CONFIG_FILEPATH } from '@/constants'
+import i18n from '@/locales'
+import { updateJSON } from '@/utils'
+import { initializeAgent } from './agentInitializer'
 
 const AgentContext = createContext<AgentContextValue | null>(null)
 
@@ -67,46 +70,29 @@ export function AgentProvider({ children, config }: AgentProviderProps) {
       agent.off('*', handleAllEvents)
     })
 
-    const initializeAgent = async () => {
-      try {
-        const [versionInfo, deviceList] = await Promise.all([
-          agent.adb.getVersion(),
-          agent.adb.getConnectedDevices(),
-        ])
-        setVersion(versionInfo.success ? `v${versionInfo.version || 'Not Installed'}` : 'Not Installed')
-        setDevices(deviceList)
-        if (deviceList.length > 0) {
-          agent.updateConfig({
-            deviceId: deviceList[0].deviceId,
-          })
-          setCurrentDeviceId(deviceList[0].deviceId)
-        }
-      }
-      catch {
-        setVersion('Error')
-        setDevices([])
-      }
-      try {
-        const [systemResult, apiResult] = await Promise.all([
-          agent.checkSystemRequirements(),
-          agent.checkModelApi(),
-        ])
-        setSystemCheck(systemResult.success)
-        setApiCheck(apiResult.success)
-      }
-      catch {
-        setSystemCheck(false)
-        setApiCheck(false)
-      }
-    }
-
-    initializeAgent()
+    initializeAgent({
+      agent,
+      config,
+      navigate,
+      setVersion,
+      setDevices,
+      setSystemCheck,
+      setApiCheck,
+      setCurrentDeviceId,
+    })
 
     return () => {
       cleanupRef.current.forEach(cleanup => cleanup())
       cleanupRef.current = []
     }
   }, [config])
+
+  useEffect(() => {
+    const lang = config.lang === 'cn' ? 'zh' : 'en'
+    if (i18n.language !== lang) {
+      i18n.changeLanguage(lang)
+    }
+  }, [config.lang])
 
   const run = useCallback(async (query: string) => {
     const agent = agentRef.current
@@ -181,13 +167,17 @@ export function AgentProvider({ children, config }: AgentProviderProps) {
   }, [])
 
   const updateConfig = useCallback((newConfig: Partial<AgentConfigType>) => {
-    const agent = agentRef.current
-    if (agent) {
-      agent.updateConfig(newConfig)
-      if (newConfig.deviceId !== undefined) {
-        setCurrentDeviceId(newConfig.deviceId)
+    const update = async () => {
+      const agent = agentRef.current
+      if (agent) {
+        agent.updateConfig(newConfig)
+        await updateJSON(AUTOGLM_CONFIG_FILEPATH, newConfig)
+        if (newConfig.deviceId !== undefined) {
+          setCurrentDeviceId(newConfig.deviceId)
+        }
       }
     }
+    return update()
   }, [])
 
   const value: AgentContextValue = {

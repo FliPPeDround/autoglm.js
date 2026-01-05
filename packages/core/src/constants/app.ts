@@ -31,6 +31,7 @@ export const APP_PACKAGES: Record<string, string> = {
   '去哪儿': 'com.Qunar',
   '去哪儿旅行': 'com.Qunar',
   '滴滴出行': 'com.sdu.didi.psnger',
+  '航旅纵横': 'com.umetrip.android.msky.app',
   // Video & Entertainment
   'bilibili': 'tv.danmaku.bili',
   '抖音': 'com.ss.android.ugc.aweme',
@@ -69,6 +70,8 @@ export const APP_PACKAGES: Record<string, string> = {
   '星穹铁道': 'com.miHoYo.hkrpg',
   '崩坏：星穹铁道': 'com.miHoYo.hkrpg',
   '恋与深空': 'com.papegames.lysk.cn',
+  // bank
+  '建设银行': 'com.jingdong.app.mall',
   'AndroidSystemSettings': 'com.android.settings',
   'Android System Settings': 'com.android.settings',
   'Android  System Settings': 'com.android.settings',

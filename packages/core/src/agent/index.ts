@@ -37,9 +37,10 @@ export class PhoneAgent {
   }
 
   abort(reason: string = 'User aborted'): void {
-    if (this.abortController) {
-      this.abortController.abort(reason)
+    if (!this.abortController) {
+      return
     }
+    this.abortController.abort(reason)
     this.isAborted = true
     this.ctx.emit(EventType.ABORTED, reason)
   }
@@ -231,7 +232,6 @@ export class PhoneAgent {
       }
     }
     catch (error) {
-      console.error(error)
       return {
         success: false,
         finished: true,

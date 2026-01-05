@@ -1,5 +1,4 @@
 import { Buffer } from 'node:buffer'
-import { exec } from 'tinyexec'
 import { runAdbCommand } from './utils'
 
 /**
@@ -140,7 +139,7 @@ export async function typeText(text: string, deviceId?: string): Promise<void> {
 export async function clearText(count: number = 100, deviceId?: string): Promise<void> {
   // Send backspace key multiple times
   for (let i = 0; i < count; i++) {
-    await runAdbCommand(deviceId, 'shell', 'input', 'keyevent', '67')
+    await runAdbCommand(deviceId, ['shell', 'input', 'keyevent', '67'])
   }
   await new Promise(resolve => setTimeout(resolve, 500))
 }
