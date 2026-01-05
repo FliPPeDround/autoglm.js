@@ -1,5 +1,6 @@
 import type { Action, ActionCallbacks, ActionResult, BackAction, BaseAction, DoubleTapAction, FinishAction, HomeAction, LaunchAction, LongPressAction, SwipeAction, TakeOverAction, TapAction, TypeAction, WaitAction } from './types'
 import type { AgentContext } from '@/context'
+import { sleep } from '@autoglm.js/shared'
 import { back, doubleTap, home, launchApp, longPress, swipe, tap } from '@/adb/device'
 import { clearText, detectAndSetAdbKeyboard, restoreKeyboard, typeText } from '@/adb/input'
 
@@ -131,8 +132,11 @@ export class ActionHandler {
    */
   private async executeTypeAction(action: TypeAction): Promise<ActionResult> {
     const originalIme = await detectAndSetAdbKeyboard(this.deviceId)
+    await sleep(300)
     await clearText(this.deviceId)
+    await sleep(300)
     await typeText(action.text, this.deviceId)
+    await sleep(300)
     await restoreKeyboard(originalIme, this.deviceId)
 
     return {
