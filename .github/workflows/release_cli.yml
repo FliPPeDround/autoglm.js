@@ -1,0 +1,15 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'cli-v*'
+
+jobs:
+  release:
+    uses: ./.github/workflows/release.yml
+    with:
+      working-directory: packages/cli
+    permissions:
+      contents: write
+      id-token: write

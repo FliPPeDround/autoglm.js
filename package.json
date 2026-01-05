@@ -34,6 +34,7 @@
     "build:desktop": "turbo build --filter=./desktop",
     "prepublishOnly": "turbo build",
     "release:core": "cd packages/core && pnpm release",
+    "release:cli": "cd packages/cli && pnpm release",
     "release:adb_w": "cd packages/assets/platform-tools-windows && pnpm release",
     "release:adb_l": "cd packages/assets/platform-tools-linux && pnpm release",
     "release:adb_d": "cd packages/assets/platform-tools-darwin && pnpm release",
