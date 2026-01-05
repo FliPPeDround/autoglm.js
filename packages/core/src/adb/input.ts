@@ -10,11 +10,7 @@ async function getCurrentIme(deviceId?: string): Promise<string> {
   try {
     const result = await runAdbCommand(
       deviceId,
-      'shell',
-      'settings',
-      'get',
-      'secure',
-      'default_input_method',
+      ['shell', 'settings', 'get', 'secure', 'default_input_method'],
     )
     // Combine stdout and stderr, then trim
     const ime = (result.stdout + result.stderr).trim()
@@ -38,7 +34,7 @@ async function setIme(ime: string, deviceId?: string): Promise<void> {
   }
 
   try {
-    await runAdbCommand(deviceId, 'shell', 'ime', 'set', ime)
+    await runAdbCommand(deviceId, ['shell', 'ime', 'set', ime])
   }
   catch (error) {
     console.warn(`Failed to set IME to "${ime}": ${error instanceof Error ? error.message : 'Unknown error'}`)
@@ -56,10 +52,7 @@ export async function detectAndSetAdbKeyboard(deviceId?: string): Promise<string
 
   try {
     // Check if ADB Keyboard is installed
-    const checkArgs = deviceId
-      ? ['-s', deviceId, 'shell', 'pm', 'list', 'packages', 'com.android.adbkeyboard']
-      : ['shell', 'pm', 'list', 'packages', 'com.android.adbkeyboard']
-    const checkResult = await exec('adb', checkArgs)
+    const checkResult = await runAdbCommand(deviceId, ['shell', 'pm', 'list', 'packages', 'com.android.adbkeyboard'])
 
     if (!checkResult.stdout.includes('com.android.adbkeyboard')) {
       console.warn('ADB Keyboard is not installed')
@@ -74,7 +67,7 @@ export async function detectAndSetAdbKeyboard(deviceId?: string): Promise<string
 
       // Warm up the keyboard by typing an empty string
       const encodedText = Buffer.from('', 'utf8').toString('base64')
-      await runAdbCommand(deviceId, 'shell', 'am', 'broadcast', '-a', 'ADB_INPUT_B64', '--es', 'msg', encodedText)
+      await runAdbCommand(deviceId, ['shell', 'am', 'broadcast', '-a', 'ADB_INPUT_B64', '--es', 'msg', encodedText])
     }
 
     return currentIme
@@ -124,7 +117,7 @@ export async function typeText(text: string, deviceId?: string): Promise<void> {
   try {
     // Encode and type the text
     const encodedText = Buffer.from(text, 'utf8').toString('base64')
-    await runAdbCommand(deviceId, 'shell', 'am', 'broadcast', '-a', 'ADB_INPUT_B64', '--es', 'msg', encodedText)
+    await runAdbCommand(deviceId, ['shell', 'am', 'broadcast', '-a', 'ADB_INPUT_B64', '--es', 'msg', encodedText])
     await new Promise(resolve => setTimeout(resolve, 500))
   }
   finally {
@@ -136,9 +129,9 @@ export async function typeText(text: string, deviceId?: string): Promise<void> {
 /**
  * Clear text by sending backspace keystrokes.
  */
-export async function clearText(count: number = 100, deviceId?: string): Promise<void> {
+export async function clearText(deviceId?: string): Promise<void> {
   // Send backspace key multiple times
-  for (let i = 0; i < count; i++) {
+  for (let i = 0; i < 100; i++) {
     await runAdbCommand(deviceId, ['shell', 'input', 'keyevent', '67'])
   }
   await new Promise(resolve => setTimeout(resolve, 500))

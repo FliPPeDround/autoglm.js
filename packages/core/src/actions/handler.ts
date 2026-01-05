@@ -1,7 +1,7 @@
 import type { Action, ActionCallbacks, ActionResult, BackAction, BaseAction, DoubleTapAction, FinishAction, HomeAction, LaunchAction, LongPressAction, SwipeAction, TakeOverAction, TapAction, TypeAction, WaitAction } from './types'
 import type { AgentContext } from '@/context'
 import { back, doubleTap, home, launchApp, longPress, swipe, tap } from '@/adb/device'
-import { typeText } from '@/adb/input'
+import { clearText, detectAndSetAdbKeyboard, restoreKeyboard, typeText } from '@/adb/input'
 
 /**
  * Create a finish action.
@@ -130,7 +130,10 @@ export class ActionHandler {
    * Execute type action.
    */
   private async executeTypeAction(action: TypeAction): Promise<ActionResult> {
+    const originalIme = await detectAndSetAdbKeyboard(this.deviceId)
+    await clearText(this.deviceId)
     await typeText(action.text, this.deviceId)
+    await restoreKeyboard(originalIme, this.deviceId)
 
     return {
       success: true,
