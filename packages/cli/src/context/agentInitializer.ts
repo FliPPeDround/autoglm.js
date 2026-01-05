@@ -137,9 +137,15 @@ async function fetchDevices(
     setDevices(deviceList)
 
     let deviceId: string | undefined
-    if (deviceList.length > 0 && !config.deviceId) {
-      deviceId = deviceList[0].deviceId
-      agent.updateConfig({ deviceId })
+    if (deviceList.length > 0) {
+      const deviceExists = config.deviceId && deviceList.some(device => device.deviceId === config.deviceId)
+      if (!config.deviceId || !deviceExists) {
+        deviceId = deviceList[0].deviceId
+        agent.updateConfig({ deviceId })
+      }
+      else {
+        deviceId = config.deviceId
+      }
     }
 
     return { devices: deviceList, deviceId }
