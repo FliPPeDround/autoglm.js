@@ -36,7 +36,7 @@
   "scripts": {
     "build": "tsdown",
     "dev": "tsdown --watch",
-    "prepublishOnly": "node ./scripts/sync-version.mjs && pnpm build",
+    "prepublishOnly": "pnpm build",
     "release": "bumpp",
     "typecheck": "tsc",
     "test": "vitest"
