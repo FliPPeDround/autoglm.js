@@ -1,10 +1,10 @@
-import { version as coreVersion } from 'autoglm.js/package.json'
+import { version as coreVersion } from 'autoglm.js/package.json' with { type: 'json' }
 import { Box, Text, useInput } from 'ink'
 import BigText from 'ink-big-text'
 import Gradient from 'ink-gradient'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { version as cliVersion } from './../../package.json'
+import { version as cliVersion } from './../../package.json' with { type: 'json' }
 
 interface VersionPageProps {
   onExit: () => void
