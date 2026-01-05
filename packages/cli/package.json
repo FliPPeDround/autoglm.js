@@ -41,6 +41,7 @@
     "typecheck": "tsc"
   },
   "dependencies": {
+    "autoglm.js": "workspace:*",
     "i18next": "^25.7.3",
     "ink": "^6.6.0",
     "ink-big-text": "^2.0.0",
@@ -64,13 +65,9 @@
     "@types/minimist": "^1.2.5",
     "@types/node-notifier": "^8.0.5",
     "@types/react": "^19.2.7",
-    "autoglm.js": "workspace:*",
-    "consola": "^3.4.2",
     "dayjs": "^1.11.19",
     "fs-extra": "^11.3.3",
-    "kolorist": "^1.8.0",
     "minimist": "^1.2.8",
-    "std-env": "^3.10.0",
     "tsx": "^4.21.0"
   }
 }
