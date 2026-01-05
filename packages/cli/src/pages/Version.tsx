@@ -1,4 +1,4 @@
-import { version as coreVersion } from 'autoglm.js/package.json' with { type: 'json' }
+import autoglmPackage from 'autoglm.js/package.json' with { type: 'json' }
 import { Box, Text, useInput } from 'ink'
 import BigText from 'ink-big-text'
 import Gradient from 'ink-gradient'
@@ -9,6 +9,8 @@ import { version as cliVersion } from './../../package.json' with { type: 'json'
 interface VersionPageProps {
   onExit: () => void
 }
+
+const { version: coreVersion } = autoglmPackage
 
 const EMOJI_SEQUENCE = ['🚀', '✨', '🌟', '💫', '⭐', '🌈', '🎉', '🎊', '🎯', '🔮']
 const GRADIENT_NAMES = ['pastel', 'morning', 'summer', 'cristal', 'mind', 'atlas'] as const
