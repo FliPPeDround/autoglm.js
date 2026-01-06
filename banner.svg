@@ -214,6 +214,6 @@
       text-rendering="geometricPrecision"
 			fill="url(#textGradient)"
   >
-		<tspan x="640" y="180" >AutoGLM</tspan>
+		<tspan x="640" y="180" >AutoGLM.JS</tspan>
 	</text>
 </svg>

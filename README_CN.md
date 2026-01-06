@@ -9,7 +9,7 @@
 
 # 基于 JavaScript 实现的 [Open-AutoGLM](https://github.com/zai-org/Open-AutoGLM)
 
-> AutoGLM.js 是一个强大的 AI 代理框架，能够通过自然语言指令自动控制 Android 设备，执行各种复杂的手机操作任务。
+**AutoGLM.js 是一个强大的 AI 代理框架，能够通过自然语言指令自动控制 Android 设备，执行各种复杂的手机操作任务。**
 
 ![cli.png](./cli.png)
 

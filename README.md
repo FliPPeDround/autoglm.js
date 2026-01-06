@@ -13,7 +13,7 @@
 
 # [Open-AutoGLM](https://github.com/zai-org/Open-AutoGLM) Implementation in JavaScript
 
-> AutoGLM.js is a powerful AI agent framework that can automatically control Android devices through natural language instructions to perform various complex mobile operation tasks.
+**AutoGLM.js is a powerful AI agent framework that can automatically control Android devices through natural language instructions to perform various complex mobile operation tasks.**
 
 ![cli.png](./cli.png)
 
