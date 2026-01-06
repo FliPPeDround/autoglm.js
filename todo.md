@@ -10,7 +10,10 @@
 [x] 改为流式输出
 [x] ACTION显示更多信息
 [x] api检查未通过时，出现提示画面
-[ ] publish to npm
+[x] publish to npm
+[ ] 支持wifi连接
+[ ] 鸿蒙系统支持
+[ ] ios系统支持
 [ ] 官网
 [ ] 推广
 [ ] desktop app
