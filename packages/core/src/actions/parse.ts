@@ -49,6 +49,17 @@ export function parseAction(actionStr: string): Action {
 
   // Check for do action
   if (actionStr.startsWith('do(')) {
+    // Check if it's a Type action with potential newlines in text
+    const typeMatch = actionStr.match(/do\(action="Type",\s*text=(.*)\)/s)
+    if (typeMatch) {
+      const textValue = parseQuotedString(typeMatch[1].trim())
+      return {
+        _metadata: 'do',
+        action: 'Type',
+        text: textValue.trim(),
+      }
+    }
+
     const ast = parse(actionStr, { ecmaVersion: 'latest' })
     if (ast.body[0].type !== 'DoWhileStatement') {
       throw new Error(`Invalid action format: ${actionStr}`)
@@ -78,18 +89,6 @@ export function parseAction(actionStr: string): Action {
         _metadata: 'do',
         action: 'Tap',
         element,
-      }
-    }
-
-    if (actionType === 'Type') {
-      const text = getText(expression)
-      if (!text) {
-        throw new Error(`Invalid Type action parameters: ${actionStr}`)
-      }
-      return {
-        _metadata: 'do',
-        action: 'Type',
-        text: text.trim(),
       }
     }
 
@@ -176,4 +175,23 @@ export function parseAction(actionStr: string): Action {
   }
 
   throw new Error(`Unknown action format: ${actionStr}`)
+}
+
+/**
+ * Parse a quoted string that may contain newlines and escape sequences.
+ * Handles both single and double quotes.
+ */
+function parseQuotedString(str: string): string {
+  if (!str) {
+    return ''
+  }
+
+  const firstChar = str[0]
+  const lastChar = str[str.length - 1]
+
+  if ((firstChar === '"' && lastChar === '"') || (firstChar === '\'' && lastChar === '\'')) {
+    return str.slice(1, -1)
+  }
+
+  return str
 }
