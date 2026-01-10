@@ -1,0 +1,19 @@
+{
+  "name": "super-xiaoai",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "tsx src/index.ts"
+  },
+  "dependencies": {
+    "@langchain/openai": "^1.2.1",
+    "@mi-gpt/next": "^1.3.2",
+    "autoglm.js": "workspace:*",
+    "dotenv": "^17.2.3",
+    "langchain": "^1.2.6",
+    "zod": "^4.3.5"
+  },
+  "devDependencies": {
+    "tsx": "^4.21.0"
+  }
+}

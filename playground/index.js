@@ -6,11 +6,11 @@ async function main() {
     maxSteps: 100,
     lang: 'cn',
     baseUrl: 'https://open.bigmodel.cn/api/paas/v4/',
-    apiKey: '74fab98ebabd483a9fb88e311c14f61c.OIQrXM8thm8vSxo1',
+    apiKey: '',
     model: 'autoglm-phone',
   })
 
-  const result = await agent.run('她好不好看')
+  const result = await agent.run('打开微信')
   console.log(result)
 }
 

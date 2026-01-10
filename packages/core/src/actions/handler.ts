@@ -230,7 +230,7 @@ export class ActionHandler {
     return {
       success: false,
       should_finish: true,
-      message: `Takeover requested but no callback provided: ${action.reason}`,
+      message: action.reason,
     }
   }
 }

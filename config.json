@@ -1,7 +1,0 @@
-{
-  "maxSteps": 200,
-  "lang": "en",
-  "baseUrl": "https://open.bigmodel.cn/api/paas/v4/",
-  "apiKey": "",
-  "model": "autoglm-phone"
-}
