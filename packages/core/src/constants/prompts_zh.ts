@@ -50,7 +50,7 @@ export const SYSTEM_PROMPT_ZH = `今天的日期是: ${formatted_date}
 - do(action="Wait", duration="x seconds")
     等待页面加载，x为需要等待多少秒。
 - finish(message="xxx")
-    finish是结束任务的操作，表示准确完整完成任务，message是终止信息。
+    finish是结束任务的操作，表示准确完整完成任务，message参数是任务完成后的总结信息，必须简洁明了地说明执行结果。
 
 必须遵循的规则：
 1. 在执行任何操作前，先检查当前app是否是目标app，如果不是，先执行 Launch。
