@@ -40,10 +40,19 @@ export function parseAction(actionStr: string): Action {
   // Check for finish action
   if (actionStr.startsWith('finish(')) {
     // Extract message
-    const match = actionStr.match(/finish\(message=(.*)\)/)
-    return {
-      _metadata: 'finish',
-      message: match ? match[1].trim() : undefined,
+    const match = actionStr.match(/finish\(message=(.*)\)/s)
+    if (match) {
+      const message = parseQuotedString(match[1].trim())
+      return {
+        _metadata: 'finish',
+        message,
+      }
+    }
+    else {
+      return {
+        _metadata: 'finish',
+        message: undefined,
+      }
     }
   }
 

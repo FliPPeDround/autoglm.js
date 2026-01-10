@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { AutoGLM, EventType } from 'autoglm.js'
+import { AutoGLM } from 'autoglm.js'
 
 async function main() {
   const agent = new AutoGLM({
@@ -10,10 +10,7 @@ async function main() {
     model: 'autoglm-phone',
   })
 
-  agent.on(EventType.ACTION, (data) => {
-    console.log(data)
-  })
-  const result = await agent.run('打开抖音搜索指甲油')
+  const result = await agent.run('她好不好看')
   console.log(result)
 }
 

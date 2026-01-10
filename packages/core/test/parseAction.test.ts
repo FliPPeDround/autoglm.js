@@ -52,3 +52,29 @@ it('should parse do action 一点也不 simple type', () => {
     }
   `)
 })
+
+it('should parse finish action', () => {
+  const actionStr = 'finish(message="任务完成")'
+  const action = parseAction(actionStr)
+  expect(action).toMatchInlineSnapshot(`
+    {
+      "_metadata": "finish",
+      "message": "任务完成",
+    }
+  `)
+})
+
+it('有换行就会有问题', () => {
+  const actionStr = `finish(message="任务完成
+  1. 任务完成
+  2. 任务完成")`
+  const action = parseAction(actionStr)
+  expect(action).toMatchInlineSnapshot(`
+    {
+      "_metadata": "finish",
+      "message": "任务完成
+      1. 任务完成
+      2. 任务完成",
+    }
+  `)
+})
