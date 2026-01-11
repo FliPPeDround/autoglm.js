@@ -62,7 +62,7 @@ function formatEventData(event: AgentEvent): string {
     const formatters: Record<string, (value: unknown) => string> = {
       action: v => String(v),
       start: v => `: [${v}]`,
-      end: v => `-> [${v}]`,
+      end: v => ` -> [${v}]`,
       app: v => `: ${v}`,
       element: v => `: [${v}]`,
       text: v => `: ${v}`,
