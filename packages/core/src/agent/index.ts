@@ -15,6 +15,7 @@ export class PhoneAgent {
   private context: ChatCompletionMessageParam[] = []
   private stepCount: number = 0
   private abortController: AbortController | null = null
+  private externalSignal?: AbortSignal
   private isAborted: boolean = false
 
   constructor(
@@ -65,11 +66,9 @@ export class PhoneAgent {
     this.abortController = new AbortController()
     this.isAborted = false
 
-    if (signal) {
-      signal.addEventListener('abort', () => {
-        this.abort(signal.reason as string || 'External signal aborted')
-      })
-    }
+    // Store external signal for use in _executeStep
+    // Each request will create its own AbortController and combine signals using AbortSignal.any()
+    this.externalSignal = signal
 
     try {
       // Reset state
@@ -98,6 +97,7 @@ export class PhoneAgent {
     }
     finally {
       this.abortController = null
+      this.externalSignal = undefined
     }
   }
 
@@ -176,8 +176,21 @@ export class PhoneAgent {
 
     // Get model response
     try {
+      // Create a new AbortController for this specific request
+      const requestController = new AbortController()
+
+      // Combine signals: abort this request if either main controller or external signal aborts
+      const signals = [requestController.signal]
+      if (this.abortController) {
+        signals.push(this.abortController.signal)
+      }
+      if (this.externalSignal) {
+        signals.push(this.externalSignal)
+      }
+      const combinedSignal = AbortSignal.any(signals)
+
       const response = await this.modelClient.request(this.context, {
-        signal: this.abortController?.signal,
+        signal: combinedSignal,
       })
 
       // Parse action from response
